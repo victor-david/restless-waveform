@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -24,11 +25,13 @@ namespace Restless.App.Wave
         private double topHeight;
         private double bottomHeight;
         private bool useDecibelScale;
+        private bool isControlPanelEnabled;
         private Settings selectedWaveSetting;
         private IPeakProvider selectedPeakProvider;
         private ImageSource fileVisualLeft;
         private ImageSource fileVisualRight;
         private GridLength fileVisualRightRow;
+        private Visibility renderTextVisibility;
         #endregion
 
         /************************************************************************/
@@ -201,6 +204,24 @@ namespace Restless.App.Wave
             get => fileVisualRightRow;
             private set => SetProperty(ref fileVisualRightRow, value);
         }
+
+        /// <summary>
+        /// Gets a boolean value that determines is the control panel is enabled.
+        /// </summary>
+        public bool IsControlPanelEnabled
+        {
+            get => isControlPanelEnabled;
+            private set => SetProperty(ref isControlPanelEnabled, value);
+        }
+
+        /// <summary>
+        /// Gets a value that determines if the rendering text nessage is visible.
+        /// </summary>
+        public Visibility RenderTextVisibility
+        {
+            get => renderTextVisibility;
+            private set => SetProperty(ref renderTextVisibility, value);
+        }
         #endregion
 
         /************************************************************************/
@@ -211,6 +232,8 @@ namespace Restless.App.Wave
             RmsBlockSize = 128;
             ImageWidth = DefaultImageWidth;
             TopHeight = BottomHeight = DefaultHeight;
+            RenderTextVisibility = Visibility.Collapsed;
+            IsControlPanelEnabled = true;
 
             /* Is default null, but the setter sets the right row height to zero when null */
             FileVisualRight = null;
@@ -266,25 +289,28 @@ namespace Restless.App.Wave
             }
         }
 
-        private void CreateVisualization(IPeakProvider peakProvider, Settings settings)
+        private async void CreateVisualization(IPeakProvider peakProvider, Settings settings)
         {
             RenderResult images = null;
             try
             {
+                SetRenderInProgress(true);
                 using (AudioFileReader waveStream = new(SelectedFile))
                 {
-                    images = WaveFormRenderer.Create(waveStream, peakProvider, settings);
+                    images = await WaveFormRenderer.CreateAsync(waveStream, peakProvider, settings);
                 }
-                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Send, new Action(() =>
-                {
-                    FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageLeft);
-                    FileVisualRight = images.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageRight) : null;
-                }));
+                
+                FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageLeft);
+                FileVisualRight = images.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageRight) : null;
             }
 
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
+            finally
+            {
+                SetRenderInProgress(false);
             }
         }
 
@@ -326,6 +352,22 @@ namespace Restless.App.Wave
             finally
             {
                 bitmap.UnlockBits(bitmapData);
+            }
+        }
+
+        private void SetRenderInProgress(bool inProgress)
+        {
+            if (inProgress)
+            {
+                FileVisualLeft = null;
+                FileVisualRight = null;
+                RenderTextVisibility = Visibility.Visible;
+                IsControlPanelEnabled = false;
+            }
+            else
+            {
+                RenderTextVisibility = Visibility.Collapsed;
+                IsControlPanelEnabled = true;
             }
         }
         #endregion

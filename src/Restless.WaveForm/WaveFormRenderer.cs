@@ -1,22 +1,55 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Restless.WaveForm
 {
+    /// <summary>
+    /// Provides static methods to render audio
+    /// </summary>
+    /// <remarks>
+    /// The methods of this class return two images, one for the left channel and one for the right.
+    /// If the wave stream is a single channel, both images are the same. The consumer
+    /// can decide based on the result (which contains the number of channels) whether to use one image or both.
+    /// </remarks>
     public static class WaveFormRenderer
     {
+        /// <summary>
+        /// Asynchronously Creates a set of images from the specified wave stream using <see cref="MaxPeakProvider"/>.
+        /// </summary>
+        /// <param name="waveStream">The wave stream.</param>
+        /// <param name="settings">The settings</param>
+        /// <returns>A render result, images for left channel and right channel</returns> 
+        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, Settings settings)
+        {
+            return await Task.Run(() =>
+            {
+                return Create(waveStream, new MaxPeakProvider(), settings);
+            });
+        }
+
+        /// <summary>
+        /// Asynchronously creates an image from the specified wave stream and the specified peak provider.
+        /// </summary>
+        /// <param name="waveStream">The wave stream.</param>
+        /// <param name="peakProvider">The peak provider</param>
+        /// <param name="settings">The settings</param>
+        /// <returns>A render result, images for left channel and right channel</returns>
+        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, IPeakProvider peakProvider, Settings settings)
+        {
+            return await Task.Run(() =>
+            {
+                return Create(waveStream, peakProvider, settings);
+            });
+        }
+
         /// <summary>
         /// Creates a set of images from the specified wave stream using <see cref="MaxPeakProvider"/>.
         /// </summary>
         /// <param name="waveStream">The wave stream.</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        /// <remarks>
-        /// This method returns two images, one for the left channel and one for the right.
-        /// If the wave stream is a single channel, both images are the same. The consumer
-        /// can decide based on the result (which contains the number of channels) whether to use one image or both.
-        /// </remarks>
         public static RenderResult Create(WaveStream waveStream, Settings settings)
         {
             return Create(waveStream, new MaxPeakProvider(), settings);
@@ -29,11 +62,6 @@ namespace Restless.WaveForm
         /// <param name="peakProvider">The peak provider</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        /// <remarks>
-        /// This method returns two images, one for the left channel and one for the right.
-        /// If the wave stream is a single channel, both images are the same. The consumer
-        /// can decide based on the result (which contains the number of channels) whether to use one image or both.
-        /// </remarks>
         public static RenderResult Create(WaveStream waveStream, IPeakProvider peakProvider, Settings settings)
         {
             if (waveStream == null)

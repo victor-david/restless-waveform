@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <!-- Open button and file name -->
-        <Grid>
+        <Grid IsEnabled="{Binding IsControlPanelEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -34,7 +34,7 @@
         <Separator Grid.Row="1"/>
 
         <!-- Controls -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" IsEnabled="{Binding IsControlPanelEnabled}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -112,6 +112,8 @@
                 <RowDefinition/>
                 <RowDefinition Height="{Binding FileVisualRightRow}"/>
             </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
 
             <Border 
                 Margin="0,4"

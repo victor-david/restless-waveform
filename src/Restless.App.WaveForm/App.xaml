@@ -23,6 +23,13 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="DarkBlue"/>
         </Style>
+
+        <Style x:Key="TextBlockRenderingStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="Foreground" Value="DarkRed"/>
+        </Style>
         
         <Style TargetType="Separator">
             <Setter Property="Margin" Value="0,4,0,8"/>
