@@ -1,6 +1,6 @@
 # Restless Waveform
 
-Simple utility to render waveforms of audio files. Uses [NAudio](https://github.com/naudio/naudio) to extract the peaks and **System.Drawing** to render the images.
+**Restless WaveForm** enables you to render waveforms of audio files. Uses [NAudio](https://github.com/naudio/naudio) to extract the peaks and **System.Drawing** to render the images.
 
 This project is based on Mark Heath's [Wave Form Renderer](https://github.com/naudio/NAudio.WaveFormRenderer), but has been considerably refactored 
 to provide the ability to render stereo audio files as well as other enhancements.
