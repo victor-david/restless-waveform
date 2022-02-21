@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Version>2.0.1</Version>
+		<Authors>Mark Heath; Victor David Sandiego</Authors>
+		<Description>Provides the ability to create wave form images from audio files.</Description>
+		<PackageProjectUrl>https://github.com/victor-david/restless-waveform</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/victor-david/restless-waveform</RepositoryUrl>
+		<PackageTags>C# .NET audio sound</PackageTags>
+		<Copyright>2022 Restless Animal Development, 2021 Mark Heath</Copyright>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RootNamespace>Restless.WaveForm</RootNamespace>
+		<AssemblyName>Restless.WaveForm</AssemblyName>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NAudio.Core" Version="2.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="5.0.1" />
+	</ItemGroup>
+</Project>

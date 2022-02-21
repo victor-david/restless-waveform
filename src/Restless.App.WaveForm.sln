@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restless.App.WaveForm", "Restless.App.WaveForm\Restless.App.WaveForm.csproj", "{78157579-A1C0-4266-ABB2-9AF44A155FAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restless.WaveForm", "Restless.WaveForm\Restless.WaveForm.csproj", "{3D1C5C3A-5B7A-470A-B113-358F8A8E1197}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78157579-A1C0-4266-ABB2-9AF44A155FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78157579-A1C0-4266-ABB2-9AF44A155FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78157579-A1C0-4266-ABB2-9AF44A155FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78157579-A1C0-4266-ABB2-9AF44A155FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D1C5C3A-5B7A-470A-B113-358F8A8E1197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D1C5C3A-5B7A-470A-B113-358F8A8E1197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D1C5C3A-5B7A-470A-B113-358F8A8E1197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D1C5C3A-5B7A-470A-B113-358F8A8E1197}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB2F0029-67F7-4105-9743-307EB9D12B01}
+	EndGlobalSection
+EndGlobal

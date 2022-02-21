@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Description>Demonstrates wave file rendering</Description>
+    <Company>Restless Animal Development</Company>
+    <Product>Restless Wave Demo</Product>
+    <Copyright>2022 Restless Animal Development</Copyright>
+    <RootNamespace>Restless.App.Wave</RootNamespace>
+    <PackageProjectUrl>https://github.com/victor-david/restless-wave</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/victor-david/restless-wave</RepositoryUrl>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <Version>1.0.0</Version>
+    <ApplicationIcon>App.Icon.128.ico</ApplicationIcon>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.0.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Restless.WaveForm\Restless.WaveForm.csproj" />
+  </ItemGroup>  
+  
+</Project>
