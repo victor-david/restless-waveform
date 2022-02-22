@@ -28,6 +28,11 @@ namespace Restless.WaveForm
             private set;
         }
 
+        /// <summary>
+        /// Gets the vertical center
+        /// </summary>
+        protected float CenterY => Settings.Height;
+
         protected ISampleProvider SampleProvider
         {
             get;
@@ -72,7 +77,7 @@ namespace Restless.WaveForm
                 throw new InvalidOperationException("Not initialized");
             }
 
-            graphics.FillRectangle(Settings.BackgroundBrush, 0, 0, Image.Width, Image.Height);
+            graphics.FillRectangle(Settings.GetBackgroundBrush(), 0, 0, Image.Width, Image.Height);
 
             if (Stream.WaveFormat.Channels == 2)
             {
@@ -90,6 +95,7 @@ namespace Restless.WaveForm
             }
 
             Stream.Position = 0;
+            
             PerformRender(graphics);
             DrawCenterLine(graphics);
         }
@@ -101,15 +107,12 @@ namespace Restless.WaveForm
         private void DrawCenterLine(Graphics graphics)
         {
             
-            if (Settings.CenterLineHeight > 0)
+            if (Settings.CenterLineThickness > 0)
             {
-                int centerY = Settings.Height + 1;
-                graphics.DrawLine(Settings.CenterLinePen, 0, centerY, Image.Width, centerY);
+                float centerY = CenterY + Settings.CenterLineThickness;
+                Pen pen = Settings.GetPen(PenType.CenterLine);
+                graphics.DrawLine(pen, 0, centerY, Image.Width, centerY);
 
-                if (Settings.CenterLineHeight > 1)
-                {
-                    graphics.DrawLine(Settings.CenterLinePen, 0, centerY + 1, Image.Width, centerY + 1);
-                }
             }
         }
     }

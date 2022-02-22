@@ -1,8 +1,5 @@
 ﻿using NAudio.Wave;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace Restless.WaveForm
 {

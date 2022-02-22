@@ -25,6 +25,11 @@ namespace Restless.WaveForm
             return Math.Max(Math.Min(value, max), min);
         }
 
+        public static float Clamp(float value, float min, float max)
+        {
+            return Math.Max(Math.Min(value, max), min);
+        }
+
         public static long SampleCount(this WaveStream stream)
         {
             int bytesPerSample = stream.WaveFormat.BitsPerSample / 8;

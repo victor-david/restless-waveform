@@ -39,9 +39,6 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -54,7 +51,7 @@
             </Grid.Resources>
 
             <!-- Renderers -->
-            <TextBlock Text="Renders"/>
+            <TextBlock Text="Renderer"/>
             <ComboBox
                 Grid.Row="1" 
                 ItemsSource="{Binding Renderers}"
@@ -79,19 +76,6 @@
                 Minimum="{x:Static vm:MainWindowViewModel.MinMaxImageWidth}"
                 Maximum="{x:Static vm:MainWindowViewModel.MaxMaxImageWidth}"
                 Value="{Binding ImageMaxWidth, Delay=500}"/>
-
-            <!-- Height of top blocks -->
-            <TextBlock Grid.Column="3">
-                <Run Text="Height"/>
-                <Run Text="{Binding Height, Mode=OneWay, StringFormat=N0}"/>
-            </TextBlock>
-            <Slider
-                Grid.Row="1" Grid.Column="3"
-                Minimum="{x:Static vm:MainWindowViewModel.MinHeight}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxHeight}"
-                Value="{Binding Height, Delay=500}"/>
-    
-            <CheckBox Grid.Column="5" Grid.RowSpan="2" IsChecked="{Binding UseDecibelScale}" Content="Use decibel scale"/>
         </Grid>
 
 

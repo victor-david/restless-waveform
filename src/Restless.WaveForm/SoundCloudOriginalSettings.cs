@@ -48,8 +48,8 @@ namespace Restless.WaveForm
         {
             LinearGradientBrush brush = new
                  (
-                     new Point(0, Height + CenterLineHeight + 1),
-                     new Point(0, (Height * 2) + CenterLineHeight + 1),
+                     new Point(0, Height + CenterLineThickness + 1),
+                     new Point(0, (Height * 2) + CenterLineThickness + 1),
                      Color.FromArgb(16, 16, 16),
                      Color.FromArgb(150, 150, 150)
                  );

@@ -21,7 +21,6 @@ namespace Restless.App.Wave
         private string selectedFile;
         private int rmsBlockSize;
         private double imageMaxWidth;
-        private double height;
         private bool useDecibelScale;
         private bool isControlPanelEnabled;
         private Settings selectedSetting;
@@ -133,19 +132,6 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
-        /// Gets or sets the height
-        /// </summary>
-        public double Height
-        {
-            get => height;
-            set
-            {
-                SetProperty(ref height, value);
-                CreateVisualization();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a boolean value that determines if a
         /// decibel scale is applied to the peak provider.
         /// </summary>
@@ -216,7 +202,6 @@ namespace Restless.App.Wave
         {
             RmsBlockSize = 128;
             ImageMaxWidth = DefaultMaxImageWidth;
-            Height = DefaultHeight;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
 
@@ -226,13 +211,15 @@ namespace Restless.App.Wave
             Renderers = new List<IRenderer>()
             {
                 new SineRenderer(),
+                new BarRenderer()
             };
 
             SelectedRenderer = Renderers.FirstOrDefault();
 
             WaveFormSettings = new List<Settings>()
             {
-                new StandardSettings(),
+                new SineSettings(),
+                new BarSettings(),
                 new SoundCloudOriginalSettings(),
                 SoundCloudBlockSettings.CreateLight(),
                 SoundCloudBlockSettings.CreateDark(),
@@ -304,7 +291,6 @@ namespace Restless.App.Wave
         private Settings GetRendererSettings()
         {
             Settings setting = SelectedWaveFormSetting;
-            setting.Height = (int)Height;
             setting.MaxWidth = (int)ImageMaxWidth;
             setting.DecibelScale = UseDecibelScale;
             return setting;
