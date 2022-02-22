@@ -53,12 +53,12 @@
                 </Style>
             </Grid.Resources>
 
-            <!-- Peak provider -->
-            <TextBlock Text="Peak Provider"/>
+            <!-- Renderers -->
+            <TextBlock Text="Renders"/>
             <ComboBox
                 Grid.Row="1" 
-                ItemsSource="{Binding PeakProviders}"
-                SelectedItem="{Binding SelectedPeakProvider}"
+                ItemsSource="{Binding Renderers}"
+                SelectedItem="{Binding SelectedRenderer}"
                 DisplayMemberPath="DisplayName"/>
 
             <!-- Rendering style -->
@@ -71,37 +71,26 @@
             
             <!-- Image width -->
             <TextBlock Grid.Column="2">
-                <Run Text="Image Width"/>
-                <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="Max Width"/>
+                <Run Text="{Binding ImageMaxWidth, Mode=OneWay, StringFormat=N0}"/>
             </TextBlock>
             <Slider 
                 Grid.Row="1" Grid.Column="2"
-                Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
-                Value="{Binding ImageWidth, Delay=500}"/>
+                Minimum="{x:Static vm:MainWindowViewModel.MinMaxImageWidth}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxMaxImageWidth}"
+                Value="{Binding ImageMaxWidth, Delay=500}"/>
 
             <!-- Height of top blocks -->
             <TextBlock Grid.Column="3">
-                <Run Text="Top Height"/>
-                <Run Text="{Binding TopHeight, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="Height"/>
+                <Run Text="{Binding Height, Mode=OneWay, StringFormat=N0}"/>
             </TextBlock>
             <Slider
                 Grid.Row="1" Grid.Column="3"
                 Minimum="{x:Static vm:MainWindowViewModel.MinHeight}"
                 Maximum="{x:Static vm:MainWindowViewModel.MaxHeight}"
-                Value="{Binding TopHeight, Delay=500}"/>
-
-            <!-- Height of botton blocks -->
-            <TextBlock Grid.Column="4">
-                <Run Text="Bottom Height"/>
-                <Run Text="{Binding BottomHeight, Mode=OneWay, StringFormat=N0}"/>
-            </TextBlock>
-            <Slider
-                Grid.Row="1" Grid.Column="4"
-                Minimum="{x:Static vm:MainWindowViewModel.MinHeight}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxHeight}"
-                Value="{Binding BottomHeight, Delay=500}"/>
-
+                Value="{Binding Height, Delay=500}"/>
+    
             <CheckBox Grid.Column="5" Grid.RowSpan="2" IsChecked="{Binding UseDecibelScale}" Content="Use decibel scale"/>
         </Grid>
 
@@ -115,21 +104,23 @@
 
             <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
 
-            <Border 
+            <ScrollViewer
                 Margin="0,4"
                 Padding="6"
+                HorizontalScrollBarVisibility="Auto"
                 BorderBrush="LightGray" 
                 BorderThickness="1">
-                    <Image Source="{Binding FileVisualLeft}"/>
-            </Border>
-            <Border 
+                <Image Source="{Binding FileVisualLeft}" Stretch="None"/>
+            </ScrollViewer>
+            <ScrollViewer
                 Grid.Row="1"
                 Margin="0,4"
                 Padding="6"
+                HorizontalScrollBarVisibility="Auto"
                 BorderBrush="LightGray" 
                 BorderThickness="1">
-                <Image Source="{Binding FileVisualRight}"/>
-            </Border>
+                <Image Source="{Binding FileVisualRight}" Stretch="None"/>
+            </ScrollViewer>
 
         </Grid>
 

@@ -9,8 +9,7 @@ namespace Restless.WaveForm
     public class SoundCloudOriginalSettings : Settings
     {
         #region Private
-        private int lastTopHeight;
-        private int lastBottomHeight;
+        private int lastHeight;
         #endregion
 
         /************************************************************************/
@@ -33,17 +32,11 @@ namespace Restless.WaveForm
 
         protected override void OnHeightSet()
         {
-            if (lastTopHeight != TopHeight)
+            if (lastHeight != Height)
             {
-                TopPeakPen = CreateGradientPen(TopHeight, Color.FromArgb(120, 120, 120), Color.FromArgb(50, 50, 50));
-                lastTopHeight = TopHeight;
-            }
-
-            if (lastBottomHeight != BottomHeight || lastTopHeight != TopHeight)
-            {
+                TopPeakPen = CreateGradientPen(Height, Color.FromArgb(120, 120, 120), Color.FromArgb(50, 50, 50));
                 BottomPeakPen = CreateSoundCloudBottomPen();
-                lastBottomHeight = BottomHeight;
-                lastTopHeight = TopHeight;
+                lastHeight = Height;
             }
         }
         #endregion
@@ -55,8 +48,8 @@ namespace Restless.WaveForm
         {
             LinearGradientBrush brush = new
                  (
-                     new Point(0, TopHeight + CenterLineHeight + 1),
-                     new Point(0, TopHeight + BottomHeight + CenterLineHeight + 1),
+                     new Point(0, Height + CenterLineHeight + 1),
+                     new Point(0, (Height * 2) + CenterLineHeight + 1),
                      Color.FromArgb(16, 16, 16),
                      Color.FromArgb(150, 150, 150)
                  );

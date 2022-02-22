@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -11,9 +12,10 @@ namespace Restless.WaveForm
     public abstract class Settings
     {
         #region Private
-        private int width;
-        private int topHeight;
-        private int bottomHeight;
+        private int maxWidth;
+        private int height;
+        private int sampleResolution;
+        private int zoomX;
         private int pixelsPerPeak;
         private int spacerPixels;
         private int centerLineHeight;
@@ -23,18 +25,27 @@ namespace Restless.WaveForm
         private Pen bottomPeakPen;
         private Pen bottomSpacerPen;
         private Pen centerLinePen;
+        private Color centerLineColor;
         #endregion
 
         /************************************************************************/
 
         #region Public consts
-        public const int MinWidth = 400;
-        public const int MaxWidth = 4800;
-        public const int DefaultWidth = 800;
+        public const int MinMaxWidth = 0;
+        public const int MaxMaxWidth = int.MaxValue;
+        public const int DefaultMaxWidth = 0;
 
-        public const int MinHeight = 2;
-        public const int MaxHeight = 252;
-        public const int DefaultHeight = 64;
+        public const int MinHeight = 32;
+        public const int MaxHeight = 228;
+        public const int DefaultHeight = 76;
+
+        public const int MinSampleResolution = 1;
+        public const int MaxSampleResolution = 128;
+        public const int DefaultSampleResolution = 8;
+
+        public const int MinZoomX = 1;
+        public const int MaxZoomX = 16;
+        public const int DefaultZoomX = 4;
 
         public const int MinPixelsPerPeak = 2;
         public const int MaxPixelsPerPeak = 16;
@@ -45,7 +56,7 @@ namespace Restless.WaveForm
         public const int DefaultSpacerPixels = MinSpacerPixels;
 
         public const int MinCenterLineHeight = 0;
-        public const int MaxCenterLineHeight = 2;
+        public const int MaxCenterLineHeight = 5;
         public const int DefaultCenterLineHeight = 1;
 
         public const float DefaultNoiseThreshold = 0.001f;
@@ -60,41 +71,45 @@ namespace Restless.WaveForm
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// Gets or sets the width of the image.
-        /// This value is clamped between <see cref="MinWidth"/> and <see cref="MaxWidth"/>.
+        /// Gets or sets the maxium width of the image, zero = no maximum
+        /// This value is clamped between <see cref="MinMaxWidth"/> and <see cref="MaxMaxWidth"/>.
         /// </summary>
-        public int Width
+        public int MaxWidth
         {
-            get => width;
-            set => width = Utility.GetEvenIntegerValue(value, MinWidth, MaxWidth);
+            get => maxWidth;
+            set => maxWidth = Utility.Clamp(value, MinMaxWidth, MaxMaxWidth);
         }
 
         /// <summary>
-        /// Gets or sets the height of the top portion of the waveform.
+        /// Gets or sets the height of the each portion of the waveform.
         /// This value is clamped between <see cref="MinHeight"/> and <see cref="MaxHeight"/>.
         /// </summary>
-        public int TopHeight
+        public int Height
         {
-            get => topHeight;
+            get => height;
             set
             {
-                topHeight = Utility.GetEvenIntegerValue(value, MinHeight, MaxHeight);
+                height = Utility.GetEvenValue(value, MinHeight, MaxHeight);
                 OnHeightSet();
             }
         }
 
         /// <summary>
-        /// Gets or sets the height of the bottom portion of the waveform.
-        /// This value is clamped between <see cref="MinHeight"/> and <see cref="MaxHeight"/>.
+        /// Gets or sets the sample resolution
         /// </summary>
-        public int BottomHeight
+        public int SampleResolution
         {
-            get => bottomHeight;
-            set
-            {
-                bottomHeight = Utility.GetEvenIntegerValue(value, MinHeight, MaxHeight);
-                OnHeightSet();
-            }
+            get => sampleResolution;
+            set => sampleResolution = Utility.GetEvenValue(value, MinSampleResolution, MaxSampleResolution);
+        }
+
+        /// <summary>
+        /// Gets or sets the zoom X factor
+        /// </summary>
+        public int ZoomX
+        {
+            get => zoomX;
+            set => zoomX = Utility.Clamp(value, MinZoomX, MaxZoomX);
         }
 
         /// <summary>
@@ -104,7 +119,7 @@ namespace Restless.WaveForm
         public int PixelsPerPeak
         {
             get => pixelsPerPeak;
-            set => pixelsPerPeak = Utility.GetEvenIntegerValue(value, MinPixelsPerPeak, MaxPixelsPerPeak);
+            set => pixelsPerPeak = Utility.GetEvenValue(value, MinPixelsPerPeak, MaxPixelsPerPeak);
         }
 
         /// <summary>
@@ -114,7 +129,17 @@ namespace Restless.WaveForm
         public int SpacerPixels
         {
             get => spacerPixels;
-            set => spacerPixels = Utility.GetEvenIntegerValue(value, MinSpacerPixels, MaxSpacerPixels);
+            set => spacerPixels = Utility.GetEvenValue(value, MinSpacerPixels, MaxSpacerPixels);
+        }
+
+        public Color CenterLineColor
+        {
+            get => centerLineColor;
+            set
+            {
+                centerLineColor = value;
+                CenterLinePen = new Pen(centerLineColor, centerLineHeight);
+            }
         }
 
         /// <summary>
@@ -124,7 +149,11 @@ namespace Restless.WaveForm
         public int CenterLineHeight
         {
             get => centerLineHeight;
-            set => centerLineHeight = Math.Max(Math.Min(value, MaxCenterLineHeight), MinCenterLineHeight); 
+            set
+            {
+                centerLineHeight = Utility.Clamp(value, MinCenterLineHeight, MaxCenterLineHeight);
+                CenterLinePen = new Pen(centerLineColor, centerLineHeight);
+            }
         }
 
         /// <summary>
@@ -194,7 +223,7 @@ namespace Restless.WaveForm
         public Pen CenterLinePen
         {
             get => centerLinePen;
-            set => centerLinePen = GetPenPropertyValue(value);
+            private set => centerLinePen = GetPenPropertyValue(value);
         }
 
         /// <summary>
@@ -229,6 +258,11 @@ namespace Restless.WaveForm
         /// </summary>
         protected Settings()
         {
+            height = DefaultHeight;
+            MaxWidth = DefaultMaxWidth;
+            SampleResolution = DefaultSampleResolution;
+            ZoomX = DefaultZoomX;
+
             PixelsPerPeak = DefaultPixelsPerPeak;
             SpacerPixels = DefaultSpacerPixels;
             CenterLineHeight = DefaultCenterLineHeight;
@@ -237,10 +271,11 @@ namespace Restless.WaveForm
             BottomPeakPen = Pens.DodgerBlue;
             TopSpacerPen = Pens.Yellow;
             BottomSpacerPen = Pens.Yellow;
-            CenterLinePen = Pens.DarkBlue;
+
+            CenterLineColor = Color.DarkBlue;
+            CenterLineHeight = DefaultCenterLineHeight;
+            
             NoiseThreshold = DefaultNoiseThreshold;
-            Width = DefaultWidth;
-            topHeight = bottomHeight = DefaultHeight;
         }
         #endregion
 
@@ -251,9 +286,15 @@ namespace Restless.WaveForm
         /// Creates a bit map object according to the current settings
         /// </summary>
         /// <returns>A Bitmap object sized according to current settings and made transparent if needed</returns>
-        public Bitmap CreateBitmapImage()
+        public Bitmap CreateBitmapImage(long sampleCount, int channels)
         {
-            Bitmap bitmap = new(Width, TopHeight + BottomHeight + CenterLineHeight);
+            // 2,147,483,647 - max int
+            long autoWidth = Utility.GetEvenValue(Math.Min(sampleCount, int.MaxValue) / channels) / SampleResolution * ZoomX;
+
+            Debug.WriteLine($"Width: {autoWidth}");
+
+
+            Bitmap bitmap = new((int)autoWidth, (Height * 2) + CenterLineHeight);
             if (BackgroundColor == Color.Transparent)
             {
                 bitmap.MakeTransparent();
@@ -266,7 +307,7 @@ namespace Restless.WaveForm
 
         #region Protected methods
         /// <summary>
-        /// Called when either <see cref="TopHeight"/> or <see cref="BottomHeight"/> is set.
+        /// Called when either <see cref="Height"/> or <see cref="BottomHeight"/> is set.
         /// </summary>
         /// <remarks>
         /// Override if you need to take action on height changes.

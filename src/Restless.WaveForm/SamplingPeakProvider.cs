@@ -35,7 +35,7 @@ namespace Restless.WaveForm
         public SamplingPeakProvider(int sampleInterval) 
         {
             DisplayName = "Sampled Peaks";
-            this.sampleInterval = Utility.GetEvenIntegerValue(sampleInterval, MinSampleInterval, MaxSampleInterval);
+            this.sampleInterval = Utility.GetEvenValue(sampleInterval, MinSampleInterval, MaxSampleInterval);
         }
         #endregion
 
