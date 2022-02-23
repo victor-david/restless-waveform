@@ -276,6 +276,7 @@ namespace Restless.App.Wave
             Calculators = new List<ISampleCalculator>()
             {
                 new FirstCalculator(),
+                new LastCalculator(),
                 new AverageCalculator(),
                 new MaxCalculator(),
                 new MinCalculator(),
