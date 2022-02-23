@@ -34,6 +34,10 @@ namespace Restless.WaveForm
 
                 graphics.DrawLine(pen, x, y1, x + Settings.ZoomX, y2);
                 x += Settings.ZoomX;
+                if (x > Image.Width)
+                {
+                    return;
+                }
             }
         }
     }

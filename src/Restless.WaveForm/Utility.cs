@@ -43,9 +43,9 @@ namespace Restless.WaveForm
         /// <param name="min">Min allowed.</param>
         /// <param name="max">Max allowed.</param>
         /// <returns>An even integer value clamped</returns>
-        public static int GetEvenValue(int value, int min, int max)
+        public static int ClampEven(int value, int min, int max)
         {
-            return Math.Max(Math.Min(GetEvenValue(value), GetEvenValue(max)), GetEvenValue(min));
+            return Math.Max(Math.Min(GetEven(value), GetEven(max)), GetEven(min));
         }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace Restless.WaveForm
         /// <param name="value">The value</param>
         /// <param name="min">Min allowed.</param>
         /// <param name="max">Max allowed.</param>
-        /// <returns>An even integer value clamped</returns>
-        public static long GetEvenValue(long value, long min, long max)
+        /// <returns>An even long value clamped</returns>
+        public static long ClampEven(long value, long min, long max)
         {
-            return Math.Max(Math.Min(GetEvenValue(value), GetEvenValue(max)), GetEvenValue(min));
+            return Math.Max(Math.Min(GetEven(value), GetEven(max)), GetEven(min));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Restless.WaveForm
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>If value is even, value; else value+1</returns>
-        public static int GetEvenValue(int value)
+        public static int GetEven(int value)
         {
             if (value % 2 != 0)
             {
@@ -79,7 +79,7 @@ namespace Restless.WaveForm
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>If value is even, value; else value+1</returns>
-        public static long GetEvenValue(long value)
+        public static long GetEven(long value)
         {
             if (value % 2 != 0)
             {

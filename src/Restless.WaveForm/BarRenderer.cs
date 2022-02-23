@@ -40,6 +40,10 @@ namespace Restless.WaveForm
                 graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);
 
                 x += Settings.ZoomX;
+                if (x > Image.Width)
+                {
+                    return;
+                }
             }
         }
     }

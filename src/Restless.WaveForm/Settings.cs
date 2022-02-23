@@ -32,15 +32,15 @@ namespace Restless.WaveForm
 
         #region Public consts
         public const int MinMaxWidth = 0;
-        public const int MaxMaxWidth = int.MaxValue;
+        public const int MaxMaxWidth = 36000;
         public const int DefaultMaxWidth = 0;
 
         public const int MinHeight = 32;
         public const int MaxHeight = 228;
         public const int DefaultHeight = 76;
 
-        public const int MinSampleResolution = 1;
-        public const int MaxSampleResolution = 128;
+        public const int MinSampleResolution = 2;
+        public const int MaxSampleResolution = 192;
         public const int DefaultSampleResolution = 8;
 
         public const int MinZoomX = 1;
@@ -94,7 +94,7 @@ namespace Restless.WaveForm
             get => height;
             set
             {
-                height = Utility.GetEvenValue(value, MinHeight, MaxHeight);
+                height = Utility.ClampEven(value, MinHeight, MaxHeight);
                 OnHeightSet();
             }
         }
@@ -105,7 +105,7 @@ namespace Restless.WaveForm
         public int SampleResolution
         {
             get => sampleResolution;
-            set => sampleResolution = Utility.GetEvenValue(value, MinSampleResolution, MaxSampleResolution);
+            set => sampleResolution = Utility.ClampEven(value, MinSampleResolution, MaxSampleResolution);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Restless.WaveForm
         public int PixelsPerPeak
         {
             get => pixelsPerPeak;
-            set => pixelsPerPeak = Utility.GetEvenValue(value, MinPixelsPerPeak, MaxPixelsPerPeak);
+            set => pixelsPerPeak = Utility.ClampEven(value, MinPixelsPerPeak, MaxPixelsPerPeak);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Restless.WaveForm
         public int SpacerPixels
         {
             get => spacerPixels;
-            set => spacerPixels = Utility.GetEvenValue(value, MinSpacerPixels, MaxSpacerPixels);
+            set => spacerPixels = Utility.ClampEven(value, MinSpacerPixels, MaxSpacerPixels);
         }
 
 
@@ -299,8 +299,6 @@ namespace Restless.WaveForm
             BottomPeakPen = Pens.DodgerBlue;
             TopSpacerPen = Pens.Yellow;
             BottomSpacerPen = Pens.Yellow;
-
-
             
             NoiseThreshold = DefaultNoiseThreshold;
         }
@@ -315,10 +313,13 @@ namespace Restless.WaveForm
         /// <returns>A Bitmap object sized according to current settings and made transparent if needed</returns>
         public Bitmap CreateBitmapImage(long sampleCount, int channels)
         {
-            // 2,147,483,647 - max int
-            long autoWidth = Utility.GetEvenValue(Math.Min(sampleCount, int.MaxValue) / channels) / SampleResolution * ZoomX;
+            // max int:              2,147,483,647
+            // max long: 9,223,372,036,854,775,807
+            Height = MaxHeight;
+            int height = (Height * 2) + CenterLineThickness;
+            long autoWidth = Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / SampleResolution * ZoomX, MaxMaxWidth);
 
-            Bitmap bitmap = new((int)autoWidth, (Height * 2) + (int)CenterLineThickness);
+            Bitmap bitmap = new((int)autoWidth, height);
             if (BackgroundColor == Color.Transparent)
             {
                 bitmap.MakeTransparent();
