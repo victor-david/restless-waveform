@@ -315,7 +315,6 @@ namespace Restless.WaveForm
         {
             // max int:              2,147,483,647
             // max long: 9,223,372,036,854,775,807
-            Height = MaxHeight;
             int height = (Height * 2) + CenterLineThickness;
             long autoWidth = Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / SampleResolution * ZoomX, MaxMaxWidth);
 

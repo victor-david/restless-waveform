@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace Restless.WaveForm
 {
@@ -23,26 +21,29 @@ namespace Restless.WaveForm
         /// Performs the rendering operation
         /// </summary>
         /// <param name="graphics">The graphics object used to draw the rendering</param>
-        protected override void PerformRender(Graphics graphics)
+        protected override void Render(Graphics graphics)
         {
-            SampleProvider.Read(Buffer, 0, Buffer.Length);
+            int x = 0;
             Pen penTop = Settings.GetPen(PenType.PrimaryLine);
             Pen penBottom = Settings.GetPen(PenType.SecondaryLine);
 
+            int sampleCount = ReadSamples();
 
-            int x = 0;
-            for (int idx = 0; idx < Buffer.Length - Settings.SampleResolution; idx += Settings.SampleResolution)
+            while (sampleCount > 0)
             {
-                float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height);
-                float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height);
-
-                graphics.DrawLine(penTop, x, CenterY, x, y1);
-                graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);
-
-                x += Settings.ZoomX;
-                if (x > Image.Width)
+                for (int idx = 0; idx < sampleCount - Settings.SampleResolution; idx += Settings.SampleResolution)
                 {
-                    return;
+                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height);
+                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height);
+
+                    graphics.DrawLine(penTop, x, CenterY, x, y1);
+                    graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);
+
+                    x += Settings.ZoomX;
+                    if (x > Image.Width)
+                    {
+                        return;
+                    }
                 }
             }
         }
