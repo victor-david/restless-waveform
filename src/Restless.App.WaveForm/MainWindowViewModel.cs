@@ -20,7 +20,8 @@ namespace Restless.App.Wave
         #region Private
         private string selectedFile;
         private int rmsBlockSize;
-        private double imageMaxWidth;
+        private double imageWidth;
+        private bool autoImageWidth;
         private bool useDecibelScale;
         private bool isControlPanelEnabled;
         private Settings selectedSetting;
@@ -34,9 +35,9 @@ namespace Restless.App.Wave
         /************************************************************************/
 
         #region Public fields
-        public const double MinMaxImageWidth = Settings.MinMaxWidth;
-        public const double MaxMaxImageWidth = Settings.MaxMaxWidth;
-        public const double DefaultMaxImageWidth = Settings.DefaultMaxWidth;
+        public const double MinImageWidth = Settings.MinWidth;
+        public const double MaxImageWidth = Settings.MaxWidth;
+        public const double DefaultImageWidth = Settings.DefaultWidth;
 
         public const double MinHeight = Settings.MinHeight;
         public const double MaxHeight = Settings.MaxHeight;
@@ -119,14 +120,31 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
-        /// Gets or sets the image max width, 0 = no max
+        /// Gets or sets the image width
         /// </summary>
-        public double ImageMaxWidth
+        public double ImageWidth
         {
-            get => imageMaxWidth;
+            get => imageWidth;
             set
             {
-                SetProperty(ref imageMaxWidth, value);
+                SetProperty(ref imageWidth, value);
+                if (!AutoImageWidth)
+                {
+                    CreateVisualization();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a boolean value that determines if the image width is automatically
+        /// set according to the audio being rendered.
+        /// </summary>
+        public bool AutoImageWidth
+        {
+            get => autoImageWidth;
+            set
+            {
+                SetProperty(ref autoImageWidth, value);
                 CreateVisualization();
             }
         }
@@ -201,7 +219,8 @@ namespace Restless.App.Wave
         public MainWindowViewModel()
         {
             RmsBlockSize = 128;
-            ImageMaxWidth = DefaultMaxImageWidth;
+            ImageWidth = DefaultImageWidth;
+            AutoImageWidth = Settings.DefaultAutoWidth;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
 
@@ -291,7 +310,8 @@ namespace Restless.App.Wave
         private Settings GetRendererSettings()
         {
             Settings setting = SelectedWaveFormSetting;
-            setting.MaxWidth = (int)ImageMaxWidth;
+            setting.Width = (int)ImageWidth;
+            setting.AutoWidth = AutoImageWidth;
             setting.DecibelScale = UseDecibelScale;
             return setting;
         }

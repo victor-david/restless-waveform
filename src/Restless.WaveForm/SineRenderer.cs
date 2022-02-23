@@ -34,12 +34,9 @@ namespace Restless.WaveForm
                     float y1 = CenterY - (Buffer[idx] * Settings.Height);
                     float y2 = CenterY - (Buffer[idx + Settings.ActualSampleResolution] * Settings.Height);
 
-                    graphics.DrawLine(pen, x, y1, x + Settings.ZoomX, y2);
-                    x += Settings.ZoomX;
-                    if (x > Image.Width)
-                    {
-                        return;
-                    }
+                    graphics.DrawLine(pen, x, y1, x + Settings.ActualZoomX, y2);
+
+                    x += Settings.ActualZoomX;
                 }
                 sampleCount = ReadSamples();
             }

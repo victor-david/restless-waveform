@@ -33,18 +33,15 @@ namespace Restless.WaveForm
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height * 5.5f);
-                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height * 5.5f);
+                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height);
+                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height);
 
                     graphics.DrawLine(penTop, x, CenterY, x, y1);
                     graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);
 
-                    x += Settings.ZoomX;
-                    if (x > Image.Width)
-                    {
-                        return;
-                    }
+                    x += Settings.ActualZoomX;
                 }
+                sampleCount = ReadSamples();
             }
         }
     }

@@ -39,6 +39,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -68,14 +69,16 @@
             
             <!-- Image width -->
             <TextBlock Grid.Column="2">
-                <Run Text="Max Width"/>
-                <Run Text="{Binding ImageMaxWidth, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="Width"/>
+                <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
             </TextBlock>
             <Slider 
                 Grid.Row="1" Grid.Column="2"
-                Minimum="{x:Static vm:MainWindowViewModel.MinMaxImageWidth}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxMaxImageWidth}"
-                Value="{Binding ImageMaxWidth, Delay=500}"/>
+                Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
+                Value="{Binding ImageWidth, Delay=500}"/>
+
+            <CheckBox Grid.Column="3" Grid.RowSpan="2" IsChecked="{Binding AutoImageWidth}" Content="Auto width"/>
         </Grid>
 
         <!-- Images -->

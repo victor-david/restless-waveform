@@ -38,7 +38,7 @@
         <Style TargetType="Slider">
             <Setter Property="Margin" Value="4,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="140"/>
+            <Setter Property="Width" Value="180"/>
         </Style>
 
         <Style TargetType="CheckBox">

@@ -11,11 +11,12 @@ namespace Restless.WaveForm
     public abstract class Settings
     {
         #region Private
-        private int maxWidth;
+        private int width;
         private int height;
         private int sampleResolution;
         private int zoomX;
         private int lineThickness;
+        private int actualLineThickness;
         private int centerLineThickness;
 
         private int pixelsPerPeak;
@@ -31,9 +32,10 @@ namespace Restless.WaveForm
         /************************************************************************/
 
         #region Public consts
-        public const int MinMaxWidth = 0;
-        public const int MaxMaxWidth = 36000;
-        public const int DefaultMaxWidth = 0;
+        public const int MinWidth = 800;
+        public const int MaxWidth = 36000;
+        public const int DefaultWidth = 1200;
+        public const bool DefaultAutoWidth = true;
 
         public const int MinHeight = 32;
         public const int MaxHeight = 228;
@@ -63,7 +65,6 @@ namespace Restless.WaveForm
         public const int MaxSpacerPixels = 10;
         public const int DefaultSpacerPixels = MinSpacerPixels;
 
-
         public const float DefaultNoiseThreshold = 0.001f;
         #endregion
 
@@ -76,13 +77,23 @@ namespace Restless.WaveForm
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// Gets or sets the maxium width of the image, zero = no maximum
-        /// This value is clamped between <see cref="MinMaxWidth"/> and <see cref="MaxMaxWidth"/>.
+        /// Gets or sets the width of the image
+        /// This value is clamped between <see cref="MinWidth"/> and <see cref="MaxWidth"/>.
         /// </summary>
-        public int MaxWidth
+        public int Width
         {
-            get => maxWidth;
-            set => maxWidth = Utility.Clamp(value, MinMaxWidth, MaxMaxWidth);
+            get => width;
+            set => width = Utility.Clamp(value, MinWidth, MaxWidth);
+        }
+
+        /// <summary>
+        /// Gets or sets a boolean value that determines if the image width is automatically
+        /// set according to the audio being rendered.
+        /// </summary>
+        public bool AutoWidth
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -128,6 +139,15 @@ namespace Restless.WaveForm
         }
 
         /// <summary>
+        /// Gets the actual zoom X factor
+        /// </summary>
+        public int ActualZoomX
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets or sets the line thickness.
         /// This value is clamped between <see cref="MinLineThickness"/> and <see cref="MaxLineThickness"/>.
         /// </summary>
@@ -135,6 +155,15 @@ namespace Restless.WaveForm
         {
             get => lineThickness;
             set => lineThickness = Utility.Clamp(value, MinLineThickness, MaxLineThickness);
+        }
+
+        /// <summary>
+        /// Gets the actual line thickness.
+        /// </summary>
+        public int ActualLineThickness
+        {
+            get => actualLineThickness;
+            private set => actualLineThickness = Utility.Clamp(value, MinLineThickness, MaxLineThickness);
         }
 
         /// <summary>
@@ -286,10 +315,12 @@ namespace Restless.WaveForm
             DisplayName = "Default";
 
             height = DefaultHeight;
-            MaxWidth = DefaultMaxWidth;
+            Width = DefaultWidth;
+            AutoWidth = DefaultAutoWidth;
+
             SampleResolution = ActualSampleResolution = DefaultSampleResolution;
-            ZoomX = DefaultZoomX;
-            LineThickness = DefaultLineThickness;
+            ZoomX = ActualZoomX = DefaultZoomX;
+            LineThickness = ActualLineThickness = DefaultLineThickness;
             CenterLineThickness = DefaultCenterLineThickness;
 
             BackgroundColor = Color.Transparent;
@@ -321,6 +352,8 @@ namespace Restless.WaveForm
             // max int:              2,147,483,647
             // max long: 9,223,372,036,854,775,807
             ActualSampleResolution = SampleResolution;
+            ActualZoomX = ZoomX;
+            ActualLineThickness = LineThickness;
             PrepareForImageWidth(sampleCount, channels);
             long autoWidth = GetClampedAutoImageWidth(sampleCount, channels);
 
@@ -350,8 +383,8 @@ namespace Restless.WaveForm
         {
             return type switch
             {
-                PenType.PrimaryLine => new Pen(PrimaryLineColor, LineThickness),
-                PenType.SecondaryLine => new Pen(SecondaryLineColor, LineThickness),
+                PenType.PrimaryLine => new Pen(PrimaryLineColor, ActualLineThickness),
+                PenType.SecondaryLine => new Pen(SecondaryLineColor, ActualLineThickness),
                 PenType.CenterLine => new Pen(CenterLineColor, CenterLineThickness),
                 _ => throw new ArgumentException(nameof(type)),
             };
@@ -384,6 +417,22 @@ namespace Restless.WaveForm
             LinearGradientBrush brush = new(new Point(0, 0), new Point(0, height), startColor, endColor);
             return new Pen(brush);
         }
+
+        /// <summary>
+        /// Gets a value for <see cref="ActualLineThickness"/>
+        /// </summary>
+        /// <param name="actualZoomX">The actual zoom x value</param>
+        /// <param name="actualLineThickness">The current actual line thickness</param>
+        /// <returns>The new actual line thickness</returns>
+        /// <remarks>
+        /// This method is called during sizing of the image width to enable a derived class
+        /// to adjust the actual line thickness in response to a smaller x zoom value.
+        /// The base method returns the same line thickness as passed.
+        /// </remarks>
+        protected virtual int GetActualLineThickness(int actualZoomX, int actualLineThickness)
+        {
+            return actualLineThickness;
+        }
         #endregion
 
         /************************************************************************/
@@ -391,8 +440,16 @@ namespace Restless.WaveForm
         #region Private methods
         private void PrepareForImageWidth(long sampleCount, int channels)
         {
+            int maxWidth = AutoWidth ? MaxWidth : Width;
             long width = GetUnClampedAutoImageWidth(sampleCount, channels);
-            while (width > MaxMaxWidth)
+            while (width > maxWidth && ActualZoomX > MinZoomX)
+            {
+                ActualZoomX--;
+                ActualLineThickness = GetActualLineThickness(ActualZoomX, ActualLineThickness);
+                width = GetUnClampedAutoImageWidth(sampleCount, channels);
+            }
+
+            while (width > maxWidth)
             {
                 ActualSampleResolution += 2;
                 width = GetUnClampedAutoImageWidth(sampleCount, channels);
@@ -401,12 +458,13 @@ namespace Restless.WaveForm
 
         private long GetUnClampedAutoImageWidth(long sampleCount, int channels)
         {
-            return Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ZoomX;
+            return Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX;
         }
 
         private long GetClampedAutoImageWidth(long sampleCount, int channels)
         {
-            return Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ZoomX, MaxMaxWidth);
+            int maxWidth = AutoWidth ? MaxWidth : Width;
+            return Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX, maxWidth);
         }
 
         private Pen GetPenPropertyValue(Pen desiredPen)
