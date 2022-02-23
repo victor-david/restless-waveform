@@ -1,4 +1,6 @@
-﻿namespace Restless.WaveForm.Calculators
+﻿using System;
+
+namespace Restless.WaveForm.Calculators
 {
     /// <summary>
     /// Represents a sample calculator that returns the last value in the range.
@@ -16,7 +18,7 @@
         /// <returns>A value calculated from the range</returns>
         public float Calculate(float[] buffer, int startIdx, int endIdx)
         {
-            return buffer[endIdx];
+            return buffer[Math.Max(0, endIdx - 1)];
         }
     }
 }
