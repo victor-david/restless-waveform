@@ -22,6 +22,7 @@ namespace Restless.App.Wave
         private int rmsBlockSize;
         private double imageWidth;
         private bool autoImageWidth;
+        private double volumeBoost;
         private bool useDecibelScale;
         private bool isControlPanelEnabled;
         private Settings selectedSetting;
@@ -39,9 +40,9 @@ namespace Restless.App.Wave
         public const double MaxImageWidth = Settings.MaxWidth;
         public const double DefaultImageWidth = Settings.DefaultWidth;
 
-        public const double MinHeight = Settings.MinHeight;
-        public const double MaxHeight = Settings.MaxHeight;
-        public const double DefaultHeight = Settings.DefaultHeight;
+        public const double MinVolumeBoost = Settings.MinVolumeBoost;
+        public const double MaxVolumeBoost = Settings.MaxVolumeBoost;
+        public const double DefaultVolumeBoost = Settings.DefaultVolumeBoost;
         #endregion
 
         /************************************************************************/
@@ -150,6 +151,18 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
+        /// Gets or sets the volume boost that is applied to the visualization.
+        /// </summary>
+        public double VolumeBoost
+        {
+            get => volumeBoost;
+            set
+            {
+                SetProperty(ref volumeBoost, value);
+                CreateVisualization();
+            }
+        }
+        /// <summary>
         /// Gets or sets a boolean value that determines if a
         /// decibel scale is applied to the peak provider.
         /// </summary>
@@ -221,6 +234,7 @@ namespace Restless.App.Wave
             RmsBlockSize = 128;
             ImageWidth = DefaultImageWidth;
             AutoImageWidth = Settings.DefaultAutoWidth;
+            VolumeBoost = DefaultVolumeBoost;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
 
@@ -312,6 +326,7 @@ namespace Restless.App.Wave
             Settings setting = SelectedWaveFormSetting;
             setting.Width = (int)ImageWidth;
             setting.AutoWidth = AutoImageWidth;
+            setting.VolumeBoost = (float)VolumeBoost;
             setting.DecibelScale = UseDecibelScale;
             return setting;
         }

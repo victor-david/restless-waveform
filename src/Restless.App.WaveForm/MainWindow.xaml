@@ -68,17 +68,36 @@
                 DisplayMemberPath="DisplayName"/>
             
             <!-- Image width -->
-            <TextBlock Grid.Column="2">
-                <Run Text="Width"/>
-                <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
+            <Grid Grid.Column="2" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock>
+                    <Run Text="Width"/>
+                    <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
+                </TextBlock>
+                <CheckBox Grid.Column="1" HorizontalAlignment="Right" IsChecked="{Binding AutoImageWidth}" Content="Auto"/>
+                <Slider
+                    Grid.Row="1" Grid.ColumnSpan="2"
+                    Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
+                    Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
+                    Value="{Binding ImageWidth, Delay=500}"/>
+            </Grid>
+                  
+            <TextBlock Grid.Column="3">
+                <Run Text="Boost"/>
+                <Run Text="{Binding VolumeBoost, Mode=OneWay, StringFormat=N2}"/>
             </TextBlock>
             <Slider 
-                Grid.Row="1" Grid.Column="2"
-                Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
-                Value="{Binding ImageWidth, Delay=500}"/>
-
-            <CheckBox Grid.Column="3" Grid.RowSpan="2" IsChecked="{Binding AutoImageWidth}" Content="Auto width"/>
+                Grid.Row="2" Grid.Column="3"
+                Minimum="{x:Static vm:MainWindowViewModel.MinVolumeBoost}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxVolumeBoost}"
+                Value="{Binding VolumeBoost, Delay=500}"/>
         </Grid>
 
         <!-- Images -->

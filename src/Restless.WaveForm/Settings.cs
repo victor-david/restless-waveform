@@ -15,6 +15,7 @@ namespace Restless.WaveForm
         private int height;
         private int sampleResolution;
         private int zoomX;
+        private float volumeBoost;
         private int lineThickness;
         private int actualLineThickness;
         private int centerLineThickness;
@@ -48,6 +49,10 @@ namespace Restless.WaveForm
         public const int MinZoomX = 1;
         public const int MaxZoomX = 16;
         public const int DefaultZoomX = 4;
+
+        public const float MinVolumeBoost = 1;
+        public const float MaxVolumeBoost = 9.5f;
+        public const float DefaultVolumeBoost = 1;
 
         public const int MinLineThickness = 1;
         public const int MaxLineThickness = 8;
@@ -145,6 +150,15 @@ namespace Restless.WaveForm
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value that boost the pparent volume of the rendered audio.
+        /// </summary>
+        public float VolumeBoost
+        {
+            get => volumeBoost;
+            set => volumeBoost = Utility.Clamp(value, MinVolumeBoost, MaxVolumeBoost);
         }
 
         /// <summary>
@@ -320,6 +334,7 @@ namespace Restless.WaveForm
 
             SampleResolution = ActualSampleResolution = DefaultSampleResolution;
             ZoomX = ActualZoomX = DefaultZoomX;
+            VolumeBoost = DefaultVolumeBoost;
             LineThickness = ActualLineThickness = DefaultLineThickness;
             CenterLineThickness = DefaultCenterLineThickness;
 

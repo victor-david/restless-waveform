@@ -12,7 +12,7 @@
         </Style>
         
         <Style x:Key="DefaultComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Margin" Value="4,2"/>
             <Setter Property="Height" Value="24"/>
             <Setter Property="MinWidth" Value="92"/>
         </Style>
@@ -36,7 +36,7 @@
         </Style>
 
         <Style TargetType="Slider">
-            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Margin" Value="4,2"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Width" Value="180"/>
         </Style>

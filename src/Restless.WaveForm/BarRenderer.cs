@@ -33,8 +33,8 @@ namespace Restless.WaveForm
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height);
-                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height);
+                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height * Settings.VolumeBoost);
+                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height * Settings.VolumeBoost);
 
                     graphics.DrawLine(penTop, x, CenterY, x, y1);
                     graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);
