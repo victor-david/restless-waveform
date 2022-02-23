@@ -2,18 +2,17 @@
 
 **Restless WaveForm** enables you to render waveforms of audio files. Uses [NAudio](https://github.com/naudio/naudio) to extract the peaks and **System.Drawing** to render the images.
 
-This project is based on Mark Heath's [Wave Form Renderer](https://github.com/naudio/NAudio.WaveFormRenderer), but has been considerably refactored 
-to provide the ability to render stereo audio files as well as other enhancements.
+This project was inspired by Mark Heath's [Wave Form Renderer](https://github.com/naudio/NAudio.WaveFormRenderer), but has been refactored 
+in several different ways.
 
 ## Features
 
-- Can render mono and stereo audio
-- Supports several peak calculation strategies (max, average, sampled, RMS, decibels)
-- Supports different colors and different sizes for the top and bottom half
-- Several built-in rendering styles
+- Render mono and stereo audio
+- Supports several calculation strategies (max, min, average, RMS)
+- Built-in rendering styles, or create your own.
  
 ## Projects
 The solution includes two projects:
 
-- Restless.WaveForm - The library used for audio file rendering
-- Restless.App.WaveForm - A WPF demonstration app.
+- **Restless.WaveForm** - The library used for audio file rendering
+- **Restless.App.WaveForm** - A WPF demonstration app.
