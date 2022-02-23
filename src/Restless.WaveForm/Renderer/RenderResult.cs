@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Renderer
 {
     /// <summary>
     /// Represents the result of a render operation

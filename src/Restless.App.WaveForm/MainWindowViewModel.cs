@@ -1,13 +1,14 @@
 ﻿using Microsoft.Win32;
 using NAudio.Wave;
-using Restless.WaveForm;
+using Restless.WaveForm.Calculators;
+using Restless.WaveForm.Renderer;
+using Restless.WaveForm.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -22,12 +23,13 @@ namespace Restless.App.Wave
         private string selectedFile;
         private int rmsBlockSize;
         private double imageWidth;
-        private double topHeight;
-        private double bottomHeight;
+        private bool autoImageWidth;
+        private double volumeBoost;
         private bool useDecibelScale;
         private bool isControlPanelEnabled;
-        private Settings selectedWaveSetting;
-        private IPeakProvider selectedPeakProvider;
+        private RenderSettings selectedSetting;
+        private IRenderer selectedRenderer;
+        private ISampleCalculator selectedCalculator;
         private ImageSource fileVisualLeft;
         private ImageSource fileVisualRight;
         private GridLength fileVisualRightRow;
@@ -37,13 +39,13 @@ namespace Restless.App.Wave
         /************************************************************************/
 
         #region Public fields
-        public const double MinImageWidth = Settings.MinWidth;
-        public const double MaxImageWidth = 2400;
-        public const double DefaultImageWidth = Settings.DefaultWidth;
+        public const double MinImageWidth = RenderSettings.MinWidth;
+        public const double MaxImageWidth = RenderSettings.MaxWidth;
+        public const double DefaultImageWidth = RenderSettings.DefaultWidth;
 
-        public const double MinHeight = 10;
-        public const double MaxHeight = 148;
-        public const double DefaultHeight = 72;
+        public const double MinVolumeBoost = RenderSettings.MinVolumeBoost;
+        public const double MaxVolumeBoost = RenderSettings.MaxVolumeBoost;
+        public const double DefaultVolumeBoost = RenderSettings.DefaultVolumeBoost;
         #endregion
 
         /************************************************************************/
@@ -80,22 +82,43 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
-        /// Gets a list of available peak providers.
+        /// Gets a list of available renderers.
         /// </summary>
-        public List<IPeakProvider> PeakProviders
+        public List<IRenderer> Renderers
         {
             get;
         }
 
         /// <summary>
-        /// Gets or sets the selected peak provider.
+        /// Gets or sets the selected renderer
         /// </summary>
-        public IPeakProvider SelectedPeakProvider
+        public IRenderer SelectedRenderer
         {
-            get => selectedPeakProvider;
+            get => selectedRenderer;
             set
             {
-                SetProperty(ref selectedPeakProvider, value);
+                SetProperty(ref selectedRenderer, value);
+                CreateVisualization();
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of available sample calculators
+        /// </summary>
+        public List<ISampleCalculator> Calculators
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected calculator
+        /// </summary>
+        public ISampleCalculator SelectedCalculator
+        {
+            get => selectedCalculator;
+            set
+            {
+                SetProperty(ref selectedCalculator, value);
                 CreateVisualization();
             }
         }
@@ -103,7 +126,7 @@ namespace Restless.App.Wave
         /// <summary>
         /// Gets a list of available wave form settings.
         /// </summary>
-        public List<Settings> WaveFormSettings
+        public List<RenderSettings> WaveFormSettings
         {
             get;
         }
@@ -111,12 +134,12 @@ namespace Restless.App.Wave
         /// <summary>
         /// Gets or sets the selected wave form setting.
         /// </summary>
-        public Settings SelectedWaveFormSetting
+        public RenderSettings SelectedWaveFormSetting
         {
-            get => selectedWaveSetting;
+            get => selectedSetting;
             set
             {
-                SetProperty(ref selectedWaveSetting, value);
+                SetProperty(ref selectedSetting, value);
                 CreateVisualization();
             }
         }
@@ -130,36 +153,39 @@ namespace Restless.App.Wave
             set
             {
                 SetProperty(ref imageWidth, value);
+                if (!AutoImageWidth)
+                {
+                    CreateVisualization();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a boolean value that determines if the image width is automatically
+        /// set according to the audio being rendered.
+        /// </summary>
+        public bool AutoImageWidth
+        {
+            get => autoImageWidth;
+            set
+            {
+                SetProperty(ref autoImageWidth, value);
                 CreateVisualization();
             }
         }
 
         /// <summary>
-        /// Gets or sets the top height
+        /// Gets or sets the volume boost that is applied to the visualization.
         /// </summary>
-        public double TopHeight
+        public double VolumeBoost
         {
-            get => topHeight;
+            get => volumeBoost;
             set
             {
-                SetProperty(ref topHeight, value);
+                SetProperty(ref volumeBoost, value);
                 CreateVisualization();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the bottom height
-        /// </summary>
-        public double BottomHeight
-        {
-            get => bottomHeight;
-            set
-            {
-                SetProperty(ref bottomHeight, value);
-                CreateVisualization();
-            }
-        }
-
         /// <summary>
         /// Gets or sets a boolean value that determines if a
         /// decibel scale is applied to the peak provider.
@@ -231,31 +257,40 @@ namespace Restless.App.Wave
         {
             RmsBlockSize = 128;
             ImageWidth = DefaultImageWidth;
-            TopHeight = BottomHeight = DefaultHeight;
+            AutoImageWidth = RenderSettings.DefaultAutoWidth;
+            VolumeBoost = DefaultVolumeBoost;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
 
             /* Is default null, but the setter sets the right row height to zero when null */
             FileVisualRight = null;
 
-            PeakProviders = new List<IPeakProvider>()
+            Renderers = new List<IRenderer>()
             {
-                new MaxPeakProvider(),
-                new RmsPeakProvider(),
-                new SamplingPeakProvider(),
-                new AveragePeakProvider()
-
+                new SineRenderer(),
+                new BarRenderer()
             };
 
-            SelectedPeakProvider = PeakProviders.FirstOrDefault();
+            SelectedRenderer = Renderers.FirstOrDefault();
 
-            WaveFormSettings = new List<Settings>()
+            Calculators = new List<ISampleCalculator>()
             {
-                new StandardSettings(),
-                new SoundCloudOriginalSettings(),
-                SoundCloudBlockSettings.CreateLight(),
-                SoundCloudBlockSettings.CreateDark(),
-                SoundCloudBlockSettings.CreateOrange(),
+                new FirstCalculator(),
+                new LastCalculator(),
+                new AverageCalculator(),
+                new MaxCalculator(),
+                new MinCalculator(),
+                new RmsCalculator(),
+            };
+
+            SelectedCalculator = Calculators.FirstOrDefault();
+
+            WaveFormSettings = new List<RenderSettings>()
+            {
+                new SineSettings(),
+                new BarSettings(),
+                BarSettings.CreateFatGray(),
+                BarSettings.CreateFatOrange(),
             };
 
             SelectedWaveFormSetting = WaveFormSettings.FirstOrDefault();
@@ -274,7 +309,13 @@ namespace Restless.App.Wave
                 Filter = "Audio Files(*.wav, *.mp3)|*.wav;*.mp3",
                 InitialDirectory = Path.GetTempPath()
             };
-
+#if DEBUG
+            string dir = @"D:\Development\Visual_Studio\Projects\Restless.WaveForm\samples";
+            if (Directory.Exists(dir))
+            {
+                dialog.InitialDirectory = dir;
+            }
+#endif
             if (dialog.ShowDialog() == true)
             {
                 SelectedFile = dialog.FileName;
@@ -283,21 +324,22 @@ namespace Restless.App.Wave
 
         private void CreateVisualization()
         {
-            if (!string.IsNullOrEmpty(SelectedFile) && File.Exists(SelectedFile) && SelectedPeakProvider != null)
+            if (!string.IsNullOrEmpty(SelectedFile) && File.Exists(SelectedFile) && SelectedRenderer != null && SelectedCalculator != null)
             {
-                CreateVisualization(SelectedPeakProvider, GetRendererSettings());
+                CreateVisualizationAsync();
             }
         }
 
-        private async void CreateVisualization(IPeakProvider peakProvider, Settings settings)
+        private async void CreateVisualizationAsync()
         {
             RenderResult images = null;
             try
             {
                 SetRenderInProgress(true);
+
                 using (AudioFileReader waveStream = new(SelectedFile))
                 {
-                    images = await WaveFormRenderer.CreateAsync(waveStream, peakProvider, settings);
+                    images = await WaveFormRenderer.CreateAsync(SelectedRenderer, waveStream, SelectedCalculator, GetRendererSettings());
                 }
                 
                 FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageLeft);
@@ -314,12 +356,12 @@ namespace Restless.App.Wave
             }
         }
 
-        private Settings GetRendererSettings()
+        private RenderSettings GetRendererSettings()
         {
-            Settings setting = SelectedWaveFormSetting;
-            setting.TopHeight = (int)TopHeight;
-            setting.BottomHeight = (int)BottomHeight;
+            RenderSettings setting = SelectedWaveFormSetting;
             setting.Width = (int)ImageWidth;
+            setting.AutoWidth = AutoImageWidth;
+            setting.VolumeBoost = (float)VolumeBoost;
             setting.DecibelScale = UseDecibelScale;
             return setting;
         }

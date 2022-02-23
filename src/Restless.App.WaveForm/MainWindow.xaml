@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     Title="Demo App"
-    Height="620" Width="1200">
+    Height="620" Width="1248">
     <Grid Margin="8,2">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -41,7 +41,6 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -53,12 +52,12 @@
                 </Style>
             </Grid.Resources>
 
-            <!-- Peak provider -->
-            <TextBlock Text="Peak Provider"/>
+            <!-- Renderers -->
+            <TextBlock Text="Renderer"/>
             <ComboBox
                 Grid.Row="1" 
-                ItemsSource="{Binding PeakProviders}"
-                SelectedItem="{Binding SelectedPeakProvider}"
+                ItemsSource="{Binding Renderers}"
+                SelectedItem="{Binding SelectedRenderer}"
                 DisplayMemberPath="DisplayName"/>
 
             <!-- Rendering style -->
@@ -68,70 +67,62 @@
                 ItemsSource="{Binding WaveFormSettings}"
                 SelectedItem="{Binding SelectedWaveFormSetting}"
                 DisplayMemberPath="DisplayName"/>
-            
+
+            <!-- Sample calculator -->
+            <TextBlock Grid.Column="2" Text="Calculator"/>
+            <ComboBox
+                Grid.Row="1" Grid.Column="2"
+                ItemsSource="{Binding Calculators}"
+                SelectedItem="{Binding SelectedCalculator}"
+                DisplayMemberPath="DisplayName"/>
+
             <!-- Image width -->
-            <TextBlock Grid.Column="2">
-                <Run Text="Image Width"/>
-                <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
+            <Grid Grid.Column="3" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock>
+                    <Run Text="Width"/>
+                    <Run Text="{Binding ImageWidth, Mode=OneWay, StringFormat=N0}"/>
+                </TextBlock>
+                <CheckBox Grid.Column="1" HorizontalAlignment="Right" IsChecked="{Binding AutoImageWidth}" Content="Auto"/>
+                <Slider
+                    Grid.Row="1" Grid.ColumnSpan="2"
+                    Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
+                    Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
+                    Value="{Binding ImageWidth, Delay=500}"/>
+            </Grid>
+                  
+            <TextBlock Grid.Column="4">
+                <Run Text="Boost"/>
+                <Run Text="{Binding VolumeBoost, Mode=OneWay, StringFormat=N2}"/>
             </TextBlock>
             <Slider 
-                Grid.Row="1" Grid.Column="2"
-                Minimum="{x:Static vm:MainWindowViewModel.MinImageWidth}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
-                Value="{Binding ImageWidth, Delay=500}"/>
-
-            <!-- Height of top blocks -->
-            <TextBlock Grid.Column="3">
-                <Run Text="Top Height"/>
-                <Run Text="{Binding TopHeight, Mode=OneWay, StringFormat=N0}"/>
-            </TextBlock>
-            <Slider
-                Grid.Row="1" Grid.Column="3"
-                Minimum="{x:Static vm:MainWindowViewModel.MinHeight}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxHeight}"
-                Value="{Binding TopHeight, Delay=500}"/>
-
-            <!-- Height of botton blocks -->
-            <TextBlock Grid.Column="4">
-                <Run Text="Bottom Height"/>
-                <Run Text="{Binding BottomHeight, Mode=OneWay, StringFormat=N0}"/>
-            </TextBlock>
-            <Slider
-                Grid.Row="1" Grid.Column="4"
-                Minimum="{x:Static vm:MainWindowViewModel.MinHeight}"
-                Maximum="{x:Static vm:MainWindowViewModel.MaxHeight}"
-                Value="{Binding BottomHeight, Delay=500}"/>
-
-            <CheckBox Grid.Column="5" Grid.RowSpan="2" IsChecked="{Binding UseDecibelScale}" Content="Use decibel scale"/>
+                Grid.Row="2" Grid.Column="4"
+                Minimum="{x:Static vm:MainWindowViewModel.MinVolumeBoost}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxVolumeBoost}"
+                Value="{Binding VolumeBoost, Delay=500}"/>
         </Grid>
-
 
         <!-- Images -->
-        <Grid Grid.Row="3">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="{Binding FileVisualRightRow}"/>
-            </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="{Binding FileVisualRightRow}"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
+                <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
 
-            <Border 
-                Margin="0,4"
-                Padding="6"
-                BorderBrush="LightGray" 
-                BorderThickness="1">
-                    <Image Source="{Binding FileVisualLeft}"/>
-            </Border>
-            <Border 
-                Grid.Row="1"
-                Margin="0,4"
-                Padding="6"
-                BorderBrush="LightGray" 
-                BorderThickness="1">
-                <Image Source="{Binding FileVisualRight}"/>
-            </Border>
-
-        </Grid>
+                <Image Source="{Binding FileVisualLeft}"/>
+                <Image Grid.Row="1" Source="{Binding FileVisualRight}"/>
+            </Grid>
+        </ScrollViewer>
 
     </Grid>
 </Window>

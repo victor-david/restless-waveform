@@ -1,7 +1,7 @@
 *.suo
+*.sfk
+*.mp3
 obj/
 bin/
 .docs/
-Help/
-packages/
 .vs/
