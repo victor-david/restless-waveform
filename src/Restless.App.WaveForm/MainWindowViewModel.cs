@@ -278,7 +278,8 @@ namespace Restless.App.Wave
                 new FirstCalculator(),
                 new AverageCalculator(),
                 new MaxCalculator(),
-                new MinCalculator()
+                new MinCalculator(),
+                new RmsCalculator(),
             };
 
             SelectedCalculator = Calculators.FirstOrDefault();
