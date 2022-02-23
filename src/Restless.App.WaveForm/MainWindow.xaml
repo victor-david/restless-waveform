@@ -78,35 +78,20 @@
                 Value="{Binding ImageMaxWidth, Delay=500}"/>
         </Grid>
 
-
         <!-- Images -->
-        <Grid Grid.Row="3">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="{Binding FileVisualRightRow}"/>
-            </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="{Binding FileVisualRightRow}"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
+                <TextBlock Style="{StaticResource TextBlockRenderingStyle}" Text="Rendering" Visibility="{Binding RenderTextVisibility}"/>
 
-            <ScrollViewer
-                Margin="0,4"
-                Padding="6"
-                HorizontalScrollBarVisibility="Auto"
-                BorderBrush="LightGray" 
-                BorderThickness="1">
-                <Image Source="{Binding FileVisualLeft}" Stretch="None"/>
-            </ScrollViewer>
-            <ScrollViewer
-                Grid.Row="1"
-                Margin="0,4"
-                Padding="6"
-                HorizontalScrollBarVisibility="Auto"
-                BorderBrush="LightGray" 
-                BorderThickness="1">
-                <Image Source="{Binding FileVisualRight}" Stretch="None"/>
-            </ScrollViewer>
-
-        </Grid>
+                <Image Source="{Binding FileVisualLeft}"/>
+                <Image Grid.Row="1" Source="{Binding FileVisualRight}"/>
+            </Grid>
+        </ScrollViewer>
 
     </Grid>
 </Window>

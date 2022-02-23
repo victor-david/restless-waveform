@@ -35,7 +35,7 @@ namespace Restless.App.Wave
 
         #region Public fields
         public const double MinMaxImageWidth = Settings.MinMaxWidth;
-        public const double MaxMaxImageWidth = 32400;
+        public const double MaxMaxImageWidth = Settings.MaxMaxWidth;
         public const double DefaultMaxImageWidth = Settings.DefaultMaxWidth;
 
         public const double MinHeight = Settings.MinHeight;

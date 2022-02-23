@@ -46,5 +46,12 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
+
+        <Style TargetType="ScrollViewer">
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
     </Application.Resources>
 </Application>
