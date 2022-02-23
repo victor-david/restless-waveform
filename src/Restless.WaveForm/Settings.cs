@@ -62,14 +62,6 @@ namespace Restless.WaveForm
         public const int MaxCenterLineThickness = 5;
         public const int DefaultCenterLineThickness = 1;
 
-        public const int MinPixelsPerPeak = 2;
-        public const int MaxPixelsPerPeak = 16;
-        public const int DefaultPixelsPerPeak = MinPixelsPerPeak;
-
-        public const int MinSpacerPixels = 0;
-        public const int MaxSpacerPixels = 10;
-        public const int DefaultSpacerPixels = MinSpacerPixels;
-
         public const float DefaultNoiseThreshold = 0.001f;
         #endregion
 
@@ -153,7 +145,23 @@ namespace Restless.WaveForm
         }
 
         /// <summary>
-        /// Gets or sets a value that boost the pparent volume of the rendered audio.
+        /// Gets or sets a value that determines if <see cref="ActualZoomX"/>
+        /// is adjusted when creating / scaling the image used for audio render.
+        /// The default value is true.
+        /// </summary>
+        /// <remarks>
+        /// If this property is false, <see cref="ActualZoomX"/> will not be affected
+        /// during the image preparation operation. Only <see cref="ActualSampleResolution"/>
+        /// will be changed if needed.
+        /// </remarks>
+        protected bool ScaleZoomX
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value that boost the apparent volume of the rendered audio.
         /// </summary>
         public float VolumeBoost
         {
@@ -236,25 +244,6 @@ namespace Restless.WaveForm
 
 
         #region Properties (others)
-        /// <summary>
-        /// Gets or sets the number of pixels used to display a peak
-        /// This value is clamped between <see cref="MinPixelsPerPeak"/> and <see cref="MaxPixelsPerPeak"/>.
-        /// </summary>
-        public int PixelsPerPeak
-        {
-            get => pixelsPerPeak;
-            set => pixelsPerPeak = Utility.ClampEven(value, MinPixelsPerPeak, MaxPixelsPerPeak);
-        }
-
-        /// <summary>
-        /// Gets or sets the number of pixels between peaks.
-        /// This value is clamped between <see cref="MinSpacerPixels"/> and <see cref="MaxSpacerPixels"/>.
-        /// </summary>
-        public int SpacerPixels
-        {
-            get => spacerPixels;
-            set => spacerPixels = Utility.ClampEven(value, MinSpacerPixels, MaxSpacerPixels);
-        }
 
         /// <summary>
         /// Gets or sets the noise threshold.
@@ -280,42 +269,6 @@ namespace Restless.WaveForm
             get;
             set;
         }
-
-        /// <summary>
-        /// Gets or sets the pen to use for top peaks.
-        /// </summary>
-        public Pen TopPeakPen
-        {
-            get => topPeakPen;
-            set => topPeakPen = GetPenPropertyValue(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the pen to use for top spacers.
-        /// </summary>
-        public Pen TopSpacerPen
-        {
-            get => topSpacerPen;
-            set => topSpacerPen = GetPenPropertyValue(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the pen to use for bottom peaks.
-        /// </summary>
-        public Pen BottomPeakPen
-        {
-            get => bottomPeakPen;
-            set => bottomPeakPen = GetPenPropertyValue(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the pen to use for bottom spacers.
-        /// </summary>
-        public Pen BottomSpacerPen
-        {
-            get => bottomSpacerPen;
-            set => bottomSpacerPen = GetPenPropertyValue(value);
-        }
         #endregion
 
         /************************************************************************/
@@ -334,6 +287,8 @@ namespace Restless.WaveForm
 
             SampleResolution = ActualSampleResolution = DefaultSampleResolution;
             ZoomX = ActualZoomX = DefaultZoomX;
+            ScaleZoomX = true;
+
             VolumeBoost = DefaultVolumeBoost;
             LineThickness = ActualLineThickness = DefaultLineThickness;
             CenterLineThickness = DefaultCenterLineThickness;
@@ -342,14 +297,6 @@ namespace Restless.WaveForm
             PrimaryLineColor = Color.Blue;
             SecondaryLineColor = Color.LightSlateGray;
             CenterLineColor = Color.DarkBlue;
-
-            PixelsPerPeak = DefaultPixelsPerPeak;
-            SpacerPixels = DefaultSpacerPixels;
-
-            TopPeakPen = Pens.CadetBlue;
-            BottomPeakPen = Pens.DodgerBlue;
-            TopSpacerPen = Pens.Yellow;
-            BottomSpacerPen = Pens.Yellow;
             
             NoiseThreshold = DefaultNoiseThreshold;
         }
@@ -457,11 +404,14 @@ namespace Restless.WaveForm
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
             long width = GetUnClampedAutoImageWidth(sampleCount, channels);
-            while (width > maxWidth && ActualZoomX > MinZoomX)
+            if (ScaleZoomX)
             {
-                ActualZoomX--;
-                ActualLineThickness = GetActualLineThickness(ActualZoomX, ActualLineThickness);
-                width = GetUnClampedAutoImageWidth(sampleCount, channels);
+                while (width > maxWidth && ActualZoomX > MinZoomX)
+                {
+                    ActualZoomX--;
+                    ActualLineThickness = GetActualLineThickness(ActualZoomX, ActualLineThickness);
+                    width = GetUnClampedAutoImageWidth(sampleCount, channels);
+                }
             }
 
             while (width > maxWidth)

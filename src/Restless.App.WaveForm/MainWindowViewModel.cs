@@ -253,10 +253,8 @@ namespace Restless.App.Wave
             {
                 new SineSettings(),
                 new BarSettings(),
-                new SoundCloudOriginalSettings(),
-                SoundCloudBlockSettings.CreateLight(),
-                SoundCloudBlockSettings.CreateDark(),
-                SoundCloudBlockSettings.CreateOrange(),
+                BarSettings.CreateFatGray(),
+                BarSettings.CreateFatOrange(),
             };
 
             SelectedWaveFormSetting = WaveFormSettings.FirstOrDefault();
