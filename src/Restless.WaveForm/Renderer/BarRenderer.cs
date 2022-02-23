@@ -1,6 +1,7 @@
 ﻿using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
+using System.Linq;
 
 namespace Restless.WaveForm.Renderer
 {
@@ -34,8 +35,9 @@ namespace Restless.WaveForm.Renderer
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - Math.Abs(Buffer[idx] * Settings.Height * Settings.VolumeBoost);
-                    float y2 = CenterY + Math.Abs(Buffer[idx] * Settings.Height * Settings.VolumeBoost);
+                    float value = Math.Abs(GetCalculatedSamplesValue(idx) * Settings.Height * Settings.VolumeBoost);
+                    float y1 = CenterY - value;
+                    float y2 = CenterY + value;
 
                     graphics.DrawLine(penTop, x, CenterY, x, y1);
                     graphics.DrawLine(penBottom, x, CenterY + Settings.CenterLineThickness, x, y2);

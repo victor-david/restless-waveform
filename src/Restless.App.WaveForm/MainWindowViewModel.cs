@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NAudio.Wave;
+using Restless.WaveForm.Calculators;
 using Restless.WaveForm.Renderer;
 using Restless.WaveForm.Settings;
 using System;
@@ -28,6 +29,7 @@ namespace Restless.App.Wave
         private bool isControlPanelEnabled;
         private RenderSettings selectedSetting;
         private IRenderer selectedRenderer;
+        private ISampleCalculator selectedCalculator;
         private ImageSource fileVisualLeft;
         private ImageSource fileVisualRight;
         private GridLength fileVisualRightRow;
@@ -96,6 +98,27 @@ namespace Restless.App.Wave
             set
             {
                 SetProperty(ref selectedRenderer, value);
+                CreateVisualization();
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of available sample calculators
+        /// </summary>
+        public List<ISampleCalculator> Calculators
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected calculator
+        /// </summary>
+        public ISampleCalculator SelectedCalculator
+        {
+            get => selectedCalculator;
+            set
+            {
+                SetProperty(ref selectedCalculator, value);
                 CreateVisualization();
             }
         }
@@ -250,6 +273,16 @@ namespace Restless.App.Wave
 
             SelectedRenderer = Renderers.FirstOrDefault();
 
+            Calculators = new List<ISampleCalculator>()
+            {
+                new FirstCalculator(),
+                new AverageCalculator(),
+                new MaxCalculator(),
+                new MinCalculator()
+            };
+
+            SelectedCalculator = Calculators.FirstOrDefault();
+
             WaveFormSettings = new List<RenderSettings>()
             {
                 new SineSettings(),
@@ -289,21 +322,22 @@ namespace Restless.App.Wave
 
         private void CreateVisualization()
         {
-            if (!string.IsNullOrEmpty(SelectedFile) && File.Exists(SelectedFile) && SelectedRenderer != null)
+            if (!string.IsNullOrEmpty(SelectedFile) && File.Exists(SelectedFile) && SelectedRenderer != null && SelectedCalculator != null)
             {
-                CreateVisualization(SelectedRenderer, GetRendererSettings());
+                CreateVisualizationAsync();
             }
         }
 
-        private async void CreateVisualization(IRenderer peakProvider, RenderSettings settings)
+        private async void CreateVisualizationAsync()
         {
             RenderResult images = null;
             try
             {
                 SetRenderInProgress(true);
+
                 using (AudioFileReader waveStream = new(SelectedFile))
                 {
-                    images = await WaveFormRenderer.CreateAsync(waveStream, peakProvider, settings);
+                    images = await WaveFormRenderer.CreateAsync(SelectedRenderer, waveStream, SelectedCalculator, GetRendererSettings());
                 }
                 
                 FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageLeft);

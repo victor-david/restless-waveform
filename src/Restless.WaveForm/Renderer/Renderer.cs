@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using Restless.WaveForm.Calculators;
 using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
@@ -40,6 +41,15 @@ namespace Restless.WaveForm.Renderer
         }
 
         protected RenderSettings Settings
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the sample calculator
+        /// </summary>
+        protected ISampleCalculator Calculator
         {
             get;
             private set;
@@ -88,10 +98,11 @@ namespace Restless.WaveForm.Renderer
         /// <param name="stream">The wave stream</param>
         /// <param name="settings">Settings</param>
         /// <returns>This instance of <see cref="Renderer"/>.</returns>
-        public IRenderer Init(Image image, WaveStream stream, RenderSettings settings)
+        public IRenderer Init(Image image, WaveStream stream, ISampleCalculator calculator, RenderSettings settings)
         {
             Image = image ?? throw new ArgumentNullException(nameof(image));
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            Calculator = calculator ?? throw new ArgumentNullException(nameof(calculator));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             TotalSamples = stream.SampleCount();
@@ -157,6 +168,19 @@ namespace Restless.WaveForm.Renderer
         protected int ReadSamples()
         {
             return sampleProvider.Read(Buffer, 0, BufferSize);
+        }
+
+        /// <summary>
+        /// Invokes the calculator for the specified start index
+        /// </summary>
+        /// <param name="startIdx">The star index</param>
+        /// <returns>A calculated value</returns>
+        /// <remarks>
+        /// This is a convenience method for derived classes that require calculated sample values.
+        /// </remarks>
+        protected float GetCalculatedSamplesValue(int startIdx)
+        {
+            return Calculator.Calculate(Buffer, startIdx, startIdx + Settings.SampleResolution);
         }
         #endregion
 

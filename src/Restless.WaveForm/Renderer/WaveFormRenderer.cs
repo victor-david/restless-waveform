@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using Restless.WaveForm.Calculators;
 using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
@@ -17,7 +18,8 @@ namespace Restless.WaveForm.Renderer
     public static class WaveFormRenderer
     {
         /// <summary>
-        /// Asynchronously Creates a set of images from the specified wave stream using <see cref="SineRenderer"/>.
+        /// Asynchronously creates a set of images from the specified wave stream using <see cref="SineRenderer"/>
+        /// and <see cref="AverageCalculator"/>
         /// </summary>
         /// <param name="waveStream">The wave stream.</param>
         /// <param name="settings">The settings</param>
@@ -26,7 +28,7 @@ namespace Restless.WaveForm.Renderer
         {
             return await Task.Run(() =>
             {
-                return Create(waveStream, new SineRenderer(), settings);
+                return Create(new SineRenderer(), waveStream, new AverageCalculator(), settings);
             });
         }
 
@@ -37,23 +39,24 @@ namespace Restless.WaveForm.Renderer
         /// <param name="renderer">The renderer</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, IRenderer renderer, RenderSettings settings)
+        public static async Task<RenderResult> CreateAsync(IRenderer renderer, WaveStream waveStream, ISampleCalculator calculator, RenderSettings settings)
         {
             return await Task.Run(() =>
             {
-                return Create(waveStream, renderer, settings);
+                return Create(renderer, waveStream, calculator, settings);
             });
         }
 
         /// <summary>
-        /// Creates a set of images from the specified wave stream using <see cref="SineRenderer"/>.
+        /// Creates a set of images from the specified wave stream using <see cref="SineRenderer"/>
+        /// and <see cref="AverageCalculator"/>
         /// </summary>
         /// <param name="waveStream">The wave stream.</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
         public static RenderResult Create(WaveStream waveStream, RenderSettings settings)
         {
-            return Create(waveStream, new SineRenderer(), settings);
+            return Create(new SineRenderer(), waveStream, new AverageCalculator(), settings);
         }
 
         /// <summary>
@@ -63,16 +66,21 @@ namespace Restless.WaveForm.Renderer
         /// <param name="renderer">The renderer</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        public static RenderResult Create(WaveStream waveStream, IRenderer renderer, RenderSettings settings)
+        public static RenderResult Create(IRenderer renderer, WaveStream waveStream, ISampleCalculator calculator, RenderSettings settings)
         {
+            if (renderer == null)
+            {
+                throw new ArgumentNullException(nameof(renderer));
+            }
+
             if (waveStream == null)
             {
                 throw new ArgumentNullException(nameof(waveStream));
             }
 
-            if (renderer == null)
+            if (calculator == null)
             {
-                throw new ArgumentNullException(nameof(renderer));
+                throw new ArgumentNullException(nameof(calculator));
             }
 
             if (settings == null)
@@ -80,16 +88,11 @@ namespace Restless.WaveForm.Renderer
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            //int bytesPerSample = waveStream.WaveFormat.BitsPerSample / 8;
-            //long samples = waveStream.Length / bytesPerSample;
-            //int samplesPerPixel = Utility.GetEvenIntegerValue(Math.Max((int)(samples / settings.Width), 2));
-            //int stepSize = settings.PixelsPerPeak + settings.SpacerPixels;
-            //peakProvider.Init(waveStream.ToSampleProvider(), samplesPerPixel * stepSize);
-            return Create(renderer, waveStream, settings);
+            return CreatePrivate(renderer, waveStream, calculator, settings);
         }
 
         // 
-        private static RenderResult Create(IRenderer renderer, WaveStream stream, RenderSettings settings)
+        private static RenderResult CreatePrivate(IRenderer renderer, WaveStream stream, ISampleCalculator calculator, RenderSettings settings)
         {
             //if (settings.DecibelScale)
             //{
@@ -105,8 +108,8 @@ namespace Restless.WaveForm.Renderer
             {
                 using (Graphics gright = Graphics.FromImage(result.ImageRight))
                 {
-                    renderer.Init(result.ImageLeft, stream, settings).Render(Channel.Left, gleft);
-                    renderer.Init(result.ImageRight, stream, settings).Render(Channel.Right, gright);
+                    renderer.Init(result.ImageLeft, stream, calculator, settings).Render(Channel.Left, gleft);
+                    renderer.Init(result.ImageRight, stream, calculator, settings).Render(Channel.Right, gright);
                 }
             }
             return result;
