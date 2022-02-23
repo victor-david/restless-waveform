@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Restless.WaveForm.Settings;
+using System;
 using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Renderer
 {
     /// <summary>
     /// Represents a renderer that produces a bar type rendering
@@ -11,7 +12,7 @@ namespace Restless.WaveForm
         public override string DisplayName => "Bar";
 
         /// <summary>
-        /// Initializes a new instance of the bar renderer class
+        /// Initializes a new instance of the <see cref="BarRenderer"/> class.
         /// </summary>
         public BarRenderer()
         {
@@ -24,8 +25,8 @@ namespace Restless.WaveForm
         protected override void Render(Graphics graphics)
         {
             int x = 0;
-            Pen penTop = Settings.GetPen(PenType.PrimaryLine);
-            Pen penBottom = Settings.GetPen(PenType.SecondaryLine);
+            Pen penTop = Settings.GetPen(RenderPenType.PrimaryLine);
+            Pen penBottom = Settings.GetPen(RenderPenType.SecondaryLine);
 
             int sampleCount = ReadSamples();
 

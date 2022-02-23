@@ -1,15 +1,15 @@
 using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Settings
 {
     /// <summary>
     /// Represents settings for <see cref="BarRenderer"/>
     /// </summary>
     /// <remarks>
-    /// This class extends <see cref="Settings"/> to provide a set of default values
+    /// This class extends <see cref="RenderSettings"/> to provide a set of default values
     /// that work decently with <see cref="BarRenderer"/>. You can still modify to customize the render result.
     /// </remarks>
-    public class BarSettings : Settings
+    public class BarSettings : RenderSettings
     {
         #region Constructors
         /// <summary>

@@ -1,9 +1,9 @@
-﻿namespace Restless.WaveForm
+﻿namespace Restless.WaveForm.Settings
 {
     /// <summary>
     /// Provides a enumeration of pen types used in the rendering process
     /// </summary>
-    public enum PenType
+    public enum RenderPenType
     {
         /// <summary>
         /// The primary line pen

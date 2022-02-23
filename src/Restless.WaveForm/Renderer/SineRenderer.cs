@@ -1,6 +1,7 @@
-﻿using System.Drawing;
+﻿using Restless.WaveForm.Settings;
+using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Renderer
 {
     /// <summary>
     /// Represents a renderer that produces a sine wave type rendering
@@ -23,7 +24,7 @@ namespace Restless.WaveForm
         protected override void Render(Graphics graphics)
         {
             int x = 0;
-            Pen pen = Settings.GetPen(PenType.PrimaryLine);
+            Pen pen = Settings.GetPen(RenderPenType.PrimaryLine);
 
             int sampleCount = ReadSamples();
 

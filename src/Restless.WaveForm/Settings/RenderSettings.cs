@@ -2,13 +2,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Settings
 {
     /// <summary>
     /// Provides settings used when rendering a waveform.
     /// This class must be inherited.
     /// </summary>
-    public abstract class Settings
+    public abstract class RenderSettings
     {
         #region Private
         private int width;
@@ -19,15 +19,7 @@ namespace Restless.WaveForm
         private int lineThickness;
         private int actualLineThickness;
         private int centerLineThickness;
-
-        private int pixelsPerPeak;
-        private int spacerPixels;
-
         private float noiseThreshold;
-        private Pen topPeakPen;
-        private Pen topSpacerPen;
-        private Pen bottomPeakPen;
-        private Pen bottomSpacerPen;
         #endregion
 
         /************************************************************************/
@@ -275,9 +267,9 @@ namespace Restless.WaveForm
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="Settings"/> class.
+        /// Initializes a new instance of the <see cref="RenderSettings"/> class.
         /// </summary>
-        protected Settings()
+        protected RenderSettings()
         {
             DisplayName = "Default";
 
@@ -341,13 +333,13 @@ namespace Restless.WaveForm
         /// </summary>
         /// <param name="type">The type of pen</param>
         /// <returns>A pen</returns>
-        public Pen GetPen(PenType type)
+        public Pen GetPen(RenderPenType type)
         {
             return type switch
             {
-                PenType.PrimaryLine => new Pen(PrimaryLineColor, ActualLineThickness),
-                PenType.SecondaryLine => new Pen(SecondaryLineColor, ActualLineThickness),
-                PenType.CenterLine => new Pen(CenterLineColor, CenterLineThickness),
+                RenderPenType.PrimaryLine => new Pen(PrimaryLineColor, ActualLineThickness),
+                RenderPenType.SecondaryLine => new Pen(SecondaryLineColor, ActualLineThickness),
+                RenderPenType.CenterLine => new Pen(CenterLineColor, CenterLineThickness),
                 _ => throw new ArgumentException(nameof(type)),
             };
         }
@@ -430,11 +422,6 @@ namespace Restless.WaveForm
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
             return Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX, maxWidth);
-        }
-
-        private Pen GetPenPropertyValue(Pen desiredPen)
-        {
-            return desiredPen ?? Pens.Transparent;
         }
         #endregion
     }

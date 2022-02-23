@@ -1,8 +1,9 @@
 ﻿using NAudio.Wave;
+using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Renderer
 {
     /// <summary>
     /// Base class for renderers
@@ -38,7 +39,7 @@ namespace Restless.WaveForm
             private set;
         }
 
-        protected Settings Settings
+        protected RenderSettings Settings
         {
             get;
             private set;
@@ -87,7 +88,7 @@ namespace Restless.WaveForm
         /// <param name="stream">The wave stream</param>
         /// <param name="settings">Settings</param>
         /// <returns>This instance of <see cref="Renderer"/>.</returns>
-        public IRenderer Init(Image image, WaveStream stream, Settings settings)
+        public IRenderer Init(Image image, WaveStream stream, RenderSettings settings)
         {
             Image = image ?? throw new ArgumentNullException(nameof(image));
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
@@ -167,7 +168,7 @@ namespace Restless.WaveForm
             if (Settings.CenterLineThickness > 0)
             {
                 float centerY = CenterY + Settings.CenterLineThickness;
-                Pen pen = Settings.GetPen(PenType.CenterLine);
+                Pen pen = Settings.GetPen(RenderPenType.CenterLine);
                 graphics.DrawLine(pen, 0, centerY, Image.Width, centerY);
 
             }

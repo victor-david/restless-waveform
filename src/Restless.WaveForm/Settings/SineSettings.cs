@@ -1,15 +1,15 @@
 using System.Drawing;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Settings
 {
     /// <summary>
     /// Represents settings for <see cref="SineRenderer"/>
     /// </summary>
     /// <remarks>
-    /// This class extends <see cref="Settings"/> to provide a set of default values
+    /// This class extends <see cref="RenderSettings"/> to provide a set of default values
     /// that work decently with <see cref="SineRenderer"/>. You can still modify to customize the render result.
     /// </remarks>
-    public class SineSettings : Settings
+    public class SineSettings : RenderSettings
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SineSettings"/> class.

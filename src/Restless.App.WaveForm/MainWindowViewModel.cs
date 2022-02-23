@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NAudio.Wave;
-using Restless.WaveForm;
+using Restless.WaveForm.Renderer;
+using Restless.WaveForm.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,7 +26,7 @@ namespace Restless.App.Wave
         private double volumeBoost;
         private bool useDecibelScale;
         private bool isControlPanelEnabled;
-        private Settings selectedSetting;
+        private RenderSettings selectedSetting;
         private IRenderer selectedRenderer;
         private ImageSource fileVisualLeft;
         private ImageSource fileVisualRight;
@@ -36,13 +37,13 @@ namespace Restless.App.Wave
         /************************************************************************/
 
         #region Public fields
-        public const double MinImageWidth = Settings.MinWidth;
-        public const double MaxImageWidth = Settings.MaxWidth;
-        public const double DefaultImageWidth = Settings.DefaultWidth;
+        public const double MinImageWidth = RenderSettings.MinWidth;
+        public const double MaxImageWidth = RenderSettings.MaxWidth;
+        public const double DefaultImageWidth = RenderSettings.DefaultWidth;
 
-        public const double MinVolumeBoost = Settings.MinVolumeBoost;
-        public const double MaxVolumeBoost = Settings.MaxVolumeBoost;
-        public const double DefaultVolumeBoost = Settings.DefaultVolumeBoost;
+        public const double MinVolumeBoost = RenderSettings.MinVolumeBoost;
+        public const double MaxVolumeBoost = RenderSettings.MaxVolumeBoost;
+        public const double DefaultVolumeBoost = RenderSettings.DefaultVolumeBoost;
         #endregion
 
         /************************************************************************/
@@ -102,7 +103,7 @@ namespace Restless.App.Wave
         /// <summary>
         /// Gets a list of available wave form settings.
         /// </summary>
-        public List<Settings> WaveFormSettings
+        public List<RenderSettings> WaveFormSettings
         {
             get;
         }
@@ -110,7 +111,7 @@ namespace Restless.App.Wave
         /// <summary>
         /// Gets or sets the selected wave form setting.
         /// </summary>
-        public Settings SelectedWaveFormSetting
+        public RenderSettings SelectedWaveFormSetting
         {
             get => selectedSetting;
             set
@@ -233,7 +234,7 @@ namespace Restless.App.Wave
         {
             RmsBlockSize = 128;
             ImageWidth = DefaultImageWidth;
-            AutoImageWidth = Settings.DefaultAutoWidth;
+            AutoImageWidth = RenderSettings.DefaultAutoWidth;
             VolumeBoost = DefaultVolumeBoost;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
@@ -249,7 +250,7 @@ namespace Restless.App.Wave
 
             SelectedRenderer = Renderers.FirstOrDefault();
 
-            WaveFormSettings = new List<Settings>()
+            WaveFormSettings = new List<RenderSettings>()
             {
                 new SineSettings(),
                 new BarSettings(),
@@ -294,7 +295,7 @@ namespace Restless.App.Wave
             }
         }
 
-        private async void CreateVisualization(IRenderer peakProvider, Settings settings)
+        private async void CreateVisualization(IRenderer peakProvider, RenderSettings settings)
         {
             RenderResult images = null;
             try
@@ -319,9 +320,9 @@ namespace Restless.App.Wave
             }
         }
 
-        private Settings GetRendererSettings()
+        private RenderSettings GetRendererSettings()
         {
-            Settings setting = SelectedWaveFormSetting;
+            RenderSettings setting = SelectedWaveFormSetting;
             setting.Width = (int)ImageWidth;
             setting.AutoWidth = AutoImageWidth;
             setting.VolumeBoost = (float)VolumeBoost;

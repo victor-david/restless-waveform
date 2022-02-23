@@ -1,9 +1,10 @@
 ﻿using NAudio.Wave;
+using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Renderer
 {
     /// <summary>
     /// Provides static methods to render audio
@@ -21,7 +22,7 @@ namespace Restless.WaveForm
         /// <param name="waveStream">The wave stream.</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns> 
-        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, Settings settings)
+        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, RenderSettings settings)
         {
             return await Task.Run(() =>
             {
@@ -36,7 +37,7 @@ namespace Restless.WaveForm
         /// <param name="renderer">The renderer</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, IRenderer renderer, Settings settings)
+        public static async Task<RenderResult> CreateAsync(WaveStream waveStream, IRenderer renderer, RenderSettings settings)
         {
             return await Task.Run(() =>
             {
@@ -50,7 +51,7 @@ namespace Restless.WaveForm
         /// <param name="waveStream">The wave stream.</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        public static RenderResult Create(WaveStream waveStream, Settings settings)
+        public static RenderResult Create(WaveStream waveStream, RenderSettings settings)
         {
             return Create(waveStream, new SineRenderer(), settings);
         }
@@ -62,7 +63,7 @@ namespace Restless.WaveForm
         /// <param name="renderer">The renderer</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
-        public static RenderResult Create(WaveStream waveStream, IRenderer renderer, Settings settings)
+        public static RenderResult Create(WaveStream waveStream, IRenderer renderer, RenderSettings settings)
         {
             if (waveStream == null)
             {
@@ -88,7 +89,7 @@ namespace Restless.WaveForm
         }
 
         // 
-        private static RenderResult Create(IRenderer renderer, WaveStream stream, Settings settings)
+        private static RenderResult Create(IRenderer renderer, WaveStream stream, RenderSettings settings)
         {
             //if (settings.DecibelScale)
             //{
