@@ -1,9 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Restless.WaveForm
+namespace Restless.WaveForm.Settings
 {
     /// <summary>
     /// Provides static utility methods
