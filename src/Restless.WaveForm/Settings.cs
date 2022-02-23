@@ -100,12 +100,21 @@ namespace Restless.WaveForm
         }
 
         /// <summary>
-        /// Gets or sets the sample resolution
+        /// Gets or sets the desired sample resolution
         /// </summary>
         public int SampleResolution
         {
             get => sampleResolution;
             set => sampleResolution = Utility.ClampEven(value, MinSampleResolution, MaxSampleResolution);
+        }
+
+        /// <summary>
+        /// Gets the actual sample resolution
+        /// </summary>
+        public int ActualSampleResolution
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -204,10 +213,6 @@ namespace Restless.WaveForm
             set => spacerPixels = Utility.ClampEven(value, MinSpacerPixels, MaxSpacerPixels);
         }
 
-
-
-
-
         /// <summary>
         /// Gets or sets the noise threshold.
         /// Absolute values less than this value are converted to zero.
@@ -282,7 +287,7 @@ namespace Restless.WaveForm
 
             height = DefaultHeight;
             MaxWidth = DefaultMaxWidth;
-            SampleResolution = DefaultSampleResolution;
+            SampleResolution = ActualSampleResolution = DefaultSampleResolution;
             ZoomX = DefaultZoomX;
             LineThickness = DefaultLineThickness;
             CenterLineThickness = DefaultCenterLineThickness;
@@ -315,10 +320,11 @@ namespace Restless.WaveForm
         {
             // max int:              2,147,483,647
             // max long: 9,223,372,036,854,775,807
-            int height = (Height * 2) + CenterLineThickness;
-            long autoWidth = Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / SampleResolution * ZoomX, MaxMaxWidth);
+            ActualSampleResolution = SampleResolution;
+            PrepareForImageWidth(sampleCount, channels);
+            long autoWidth = GetClampedAutoImageWidth(sampleCount, channels);
 
-            Bitmap bitmap = new((int)autoWidth, height);
+            Bitmap bitmap = new((int)autoWidth, (Height * 2) + CenterLineThickness);
             if (BackgroundColor == Color.Transparent)
             {
                 bitmap.MakeTransparent();
@@ -383,6 +389,26 @@ namespace Restless.WaveForm
         /************************************************************************/
 
         #region Private methods
+        private void PrepareForImageWidth(long sampleCount, int channels)
+        {
+            long width = GetUnClampedAutoImageWidth(sampleCount, channels);
+            while (width > MaxMaxWidth)
+            {
+                ActualSampleResolution += 2;
+                width = GetUnClampedAutoImageWidth(sampleCount, channels);
+            }
+        }
+
+        private long GetUnClampedAutoImageWidth(long sampleCount, int channels)
+        {
+            return Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ZoomX;
+        }
+
+        private long GetClampedAutoImageWidth(long sampleCount, int channels)
+        {
+            return Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ZoomX, MaxMaxWidth);
+        }
+
         private Pen GetPenPropertyValue(Pen desiredPen)
         {
             return desiredPen ?? Pens.Transparent;
