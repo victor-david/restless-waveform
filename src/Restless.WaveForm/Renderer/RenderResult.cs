@@ -37,9 +37,9 @@ namespace Restless.WaveForm.Renderer
         }
 
         /// <summary>
-        /// Gets the number of samples for this result
+        /// Gets the number of samples for this result.
         /// </summary>
-        public long Samples
+        public long SampleCount
         {
             get;
         }
@@ -48,7 +48,7 @@ namespace Restless.WaveForm.Renderer
         {
             ImageLeft = imageLeft ?? throw new ArgumentNullException(nameof(imageLeft));
             ImageRight = imageRight ?? throw new ArgumentNullException(nameof(imageRight));
-            Samples = samples;
+            SampleCount = samples;
             Channels = channels;
         }
     }

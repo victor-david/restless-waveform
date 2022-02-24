@@ -21,7 +21,7 @@ namespace Restless.App.Wave
     {
         #region Private
         private string selectedFile;
-        private int rmsBlockSize;
+        private long sampleCount;
         private double imageWidth;
         private bool autoImageWidth;
         private double volumeBoost;
@@ -73,12 +73,12 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
-        /// Gets or sets the block size.
+        /// Gets the sample count.
         /// </summary>
-        public int RmsBlockSize
+        public long SampleCount
         {
-            get => rmsBlockSize;
-            set => SetProperty(ref rmsBlockSize, value);
+            get => sampleCount;
+            private set => SetProperty(ref sampleCount, value);
         }
 
         /// <summary>
@@ -255,7 +255,6 @@ namespace Restless.App.Wave
         #region Constructor
         public MainWindowViewModel()
         {
-            RmsBlockSize = 128;
             ImageWidth = DefaultImageWidth;
             AutoImageWidth = RenderSettings.DefaultAutoWidth;
             VolumeBoost = DefaultVolumeBoost;
@@ -332,18 +331,19 @@ namespace Restless.App.Wave
 
         private async void CreateVisualizationAsync()
         {
-            RenderResult images = null;
+            RenderResult result = null;
             try
             {
                 SetRenderInProgress(true);
 
                 using (AudioFileReader waveStream = new(SelectedFile))
                 {
-                    images = await WaveFormRenderer.CreateAsync(SelectedRenderer, waveStream, SelectedCalculator, GetRendererSettings());
+                    result = await WaveFormRenderer.CreateAsync(SelectedRenderer, waveStream, SelectedCalculator, GetRendererSettings());
                 }
-                
-                FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageLeft);
-                FileVisualRight = images.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)images.ImageRight) : null;
+
+                SampleCount = result.SampleCount;
+                FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageLeft);
+                FileVisualRight = result.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageRight) : null;
             }
 
             catch (Exception ex)

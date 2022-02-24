@@ -41,6 +41,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -107,6 +108,11 @@
                 Minimum="{x:Static vm:MainWindowViewModel.MinVolumeBoost}"
                 Maximum="{x:Static vm:MainWindowViewModel.MaxVolumeBoost}"
                 Value="{Binding VolumeBoost, Delay=500}"/>
+
+            <TextBlock Grid.Column="5" Grid.RowSpan="2" HorizontalAlignment="Right">
+                <Run Foreground="Firebrick" Text="{Binding SampleCount, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="samples"/>
+            </TextBlock>
         </Grid>
 
         <!-- Images -->
