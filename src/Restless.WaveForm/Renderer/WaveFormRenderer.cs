@@ -33,10 +33,11 @@ namespace Restless.WaveForm.Renderer
         }
 
         /// <summary>
-        /// Asynchronously creates an image from the specified wave stream and the specified renderer.
+        /// Asynchronously creates an image from the specified wave stream using the specified renderer and calculator.
         /// </summary>
-        /// <param name="waveStream">The wave stream.</param>
         /// <param name="renderer">The renderer</param>
+        /// <param name="waveStream">The wave stream.</param>
+        /// <param name="calculator">The sample calculator</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
         public static async Task<RenderResult> CreateAsync(IRenderer renderer, WaveStream waveStream, ISampleCalculator calculator, RenderSettings settings)
@@ -60,10 +61,11 @@ namespace Restless.WaveForm.Renderer
         }
 
         /// <summary>
-        /// Creates an image from the specified wave stream and the specified peak renderer.
+        /// Creates an image from the specified wave stream using the specified renderer and calculator.
         /// </summary>
-        /// <param name="waveStream">The wave stream.</param>
         /// <param name="renderer">The renderer</param>
+        /// <param name="waveStream">The wave stream.</param>
+        /// <param name="calculator">The sample calculator</param>
         /// <param name="settings">The settings</param>
         /// <returns>A render result, images for left channel and right channel</returns>
         public static RenderResult Create(IRenderer renderer, WaveStream waveStream, ISampleCalculator calculator, RenderSettings settings)
@@ -91,14 +93,8 @@ namespace Restless.WaveForm.Renderer
             return CreatePrivate(renderer, waveStream, calculator, settings);
         }
 
-        // 
         private static RenderResult CreatePrivate(IRenderer renderer, WaveStream stream, ISampleCalculator calculator, RenderSettings settings)
         {
-            //if (settings.DecibelScale)
-            //{
-            //    peakProvider = new DecibelPeakProvider(peakProvider, 48);
-            //}
-
             long samples = stream.SampleCount();
             int channels = stream.WaveFormat.Channels;
 
