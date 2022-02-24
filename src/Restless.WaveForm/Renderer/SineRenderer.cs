@@ -32,8 +32,8 @@ namespace Restless.WaveForm.Renderer
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - (Buffer[idx] * Settings.Height * Settings.VolumeBoost);
-                    float y2 = CenterY - (Buffer[idx + Settings.ActualSampleResolution] * Settings.Height * Settings.VolumeBoost);
+                    float y1 = CenterY - GetCalculatedSamplesValue(idx) * Settings.Height * Settings.VolumeBoost;
+                    float y2 = CenterY - GetCalculatedSamplesValue(idx + Settings.ActualSampleResolution) * Settings.Height * Settings.VolumeBoost;
 
                     graphics.DrawLine(pen, x, y1, x + Settings.ActualZoomX, y2);
 
