@@ -7,6 +7,9 @@ namespace Restless.WaveForm.Calculators
     /// </summary>
     public class MaxCalculator : ISampleCalculator
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public string DisplayName => "Max";
 
         /// <summary>

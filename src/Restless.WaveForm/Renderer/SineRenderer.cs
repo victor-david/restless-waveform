@@ -8,6 +8,9 @@ namespace Restless.WaveForm.Renderer
     /// </summary>
     public class SineRenderer : Renderer
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public override string DisplayName => "Sine";
 
         /// <summary>

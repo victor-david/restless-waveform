@@ -7,6 +7,9 @@ namespace Restless.WaveForm.Calculators
     /// </summary>
     public class RmsCalculator : ISampleCalculator
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public string DisplayName => "Rms";
 
         /// <summary>

@@ -25,35 +25,104 @@ namespace Restless.WaveForm.Settings
         /************************************************************************/
 
         #region Public consts
+        /// <summary>
+        /// The minimum value for <see cref="Width"/>
+        /// </summary>
         public const int MinWidth = 800;
+        /// <summary>
+        /// The maximum value for <see cref="Width"/>
+        /// </summary>
         public const int MaxWidth = 36000;
+        /// <summary>
+        /// The default value for <see cref="Width"/>
+        /// </summary>
         public const int DefaultWidth = 1200;
+        /// <summary>
+        /// The default value for <see cref="AutoWidth"/>.
+        /// </summary>
         public const bool DefaultAutoWidth = true;
 
+        /// <summary>
+        /// The minimum value for <see cref="Height"/>
+        /// </summary>
         public const int MinHeight = 32;
+        /// <summary>
+        /// The maximum value for <see cref="Height"/>
+        /// </summary>
         public const int MaxHeight = 228;
+        /// <summary>
+        /// The default value for <see cref="Height"/>
+        /// </summary>
         public const int DefaultHeight = 76;
 
+        /// <summary>
+        /// The minimum value for <see cref="SampleResolution"/>
+        /// </summary>
         public const int MinSampleResolution = 2;
+        /// <summary>
+        /// The maximum value for <see cref="SampleResolution"/>
+        /// </summary>
         public const int MaxSampleResolution = 192;
+        /// <summary>
+        /// The default value for <see cref="SampleResolution"/>
+        /// </summary>
         public const int DefaultSampleResolution = 8;
 
+        /// <summary>
+        /// The minimum value for <see cref="ZoomX"/>
+        /// </summary>
         public const int MinZoomX = 1;
+        /// <summary>
+        /// The maximum value for <see cref="ZoomX"/>
+        /// </summary>
         public const int MaxZoomX = 16;
+        /// <summary>
+        /// The default value for <see cref="ZoomX"/>
+        /// </summary>
         public const int DefaultZoomX = 4;
 
+        /// <summary>
+        /// The minimum value for <see cref="VolumeBoost"/>
+        /// </summary>
         public const float MinVolumeBoost = 1;
+        /// <summary>
+        /// The maximum value for <see cref="VolumeBoost"/>
+        /// </summary>
         public const float MaxVolumeBoost = 9.5f;
+        /// <summary>
+        /// The default value for <see cref="VolumeBoost"/>
+        /// </summary>
         public const float DefaultVolumeBoost = 1;
 
+        /// <summary>
+        /// The minimum value for <see cref="LineThickness"/>
+        /// </summary>
         public const int MinLineThickness = 1;
+        /// <summary>
+        /// The maximum value for <see cref="LineThickness"/>
+        /// </summary>
         public const int MaxLineThickness = 8;
+        /// <summary>
+        /// The default value for <see cref="LineThickness"/>
+        /// </summary>
         public const int DefaultLineThickness = 1;
 
+        /// <summary>
+        /// The minimum value for <see cref="CenterLineThickness"/>
+        /// </summary>
         public const int MinCenterLineThickness = 0;
+        /// <summary>
+        /// The maximum value for <see cref="CenterLineThickness"/>
+        /// </summary>
         public const int MaxCenterLineThickness = 5;
+        /// <summary>
+        /// The default value for <see cref="CenterLineThickness"/>
+        /// </summary>
         public const int DefaultCenterLineThickness = 1;
 
+        /// <summary>
+        /// The default value for <see cref="SampleThreshold"/>
+        /// </summary>
         public const float DefaultSampleThreshold = 0.001f;
         #endregion
 
@@ -72,7 +141,7 @@ namespace Restless.WaveForm.Settings
         public int Width
         {
             get => width;
-            set => width = Utility.Clamp(value, MinWidth, MaxWidth);
+            set => width = value.Clamp(MinWidth, MaxWidth);
         }
 
         /// <summary>
@@ -94,7 +163,7 @@ namespace Restless.WaveForm.Settings
             get => height;
             set
             {
-                height = Utility.ClampEven(value, MinHeight, MaxHeight);
+                height = value.ClampEven(MinHeight, MaxHeight);
                 OnHeightSet();
             }
         }
@@ -105,7 +174,7 @@ namespace Restless.WaveForm.Settings
         public int SampleResolution
         {
             get => sampleResolution;
-            set => sampleResolution = Utility.ClampEven(value, MinSampleResolution, MaxSampleResolution);
+            set => sampleResolution = value.ClampEven(MinSampleResolution, MaxSampleResolution);
         }
 
         /// <summary>
@@ -124,7 +193,7 @@ namespace Restless.WaveForm.Settings
         public int ZoomX
         {
             get => zoomX;
-            set => zoomX = Utility.Clamp(value, MinZoomX, MaxZoomX);
+            set => zoomX = value.Clamp(MinZoomX, MaxZoomX);
         }
 
         /// <summary>
@@ -158,7 +227,7 @@ namespace Restless.WaveForm.Settings
         public float VolumeBoost
         {
             get => volumeBoost;
-            set => volumeBoost = Utility.Clamp(value, MinVolumeBoost, MaxVolumeBoost);
+            set => volumeBoost = value.Clamp(MinVolumeBoost, MaxVolumeBoost);
         }
 
         /// <summary>
@@ -168,7 +237,7 @@ namespace Restless.WaveForm.Settings
         public int LineThickness
         {
             get => lineThickness;
-            set => lineThickness = Utility.Clamp(value, MinLineThickness, MaxLineThickness);
+            set => lineThickness = value.Clamp(MinLineThickness, MaxLineThickness);
         }
 
         /// <summary>
@@ -177,7 +246,7 @@ namespace Restless.WaveForm.Settings
         public int ActualLineThickness
         {
             get => actualLineThickness;
-            private set => actualLineThickness = Utility.Clamp(value, MinLineThickness, MaxLineThickness);
+            private set => actualLineThickness = value.Clamp(MinLineThickness, MaxLineThickness);
         }
 
         /// <summary>
@@ -187,7 +256,7 @@ namespace Restless.WaveForm.Settings
         public int CenterLineThickness
         {
             get => centerLineThickness;
-            set => centerLineThickness = Utility.Clamp(value, MinCenterLineThickness, MaxCenterLineThickness);
+            set => centerLineThickness = value.Clamp(MinCenterLineThickness, MaxCenterLineThickness);
         }
         #endregion
 

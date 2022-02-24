@@ -28,18 +28,27 @@ namespace Restless.WaveForm.Renderer
         /// </summary>
         public virtual string DisplayName { get; }
 
+        /// <summary>
+        /// Gets the image associated with the render
+        /// </summary>
         protected Image Image
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the audio stream associated with the render
+        /// </summary>
         protected WaveStream Stream
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the settings associated with the render
+        /// </summary>
         protected RenderSettings Settings
         {
             get;
@@ -98,6 +107,7 @@ namespace Restless.WaveForm.Renderer
         /// </summary>
         /// <param name="image">The image on which to render</param>
         /// <param name="stream">The wave stream</param>
+        /// <param name="calculator">The sample calculator</param>
         /// <param name="settings">Settings</param>
         /// <returns>This instance of <see cref="Renderer"/>.</returns>
         public IRenderer Init(Image image, WaveStream stream, ISampleCalculator calculator, RenderSettings settings)

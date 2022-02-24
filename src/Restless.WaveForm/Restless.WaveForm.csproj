@@ -1,18 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Version>1.0.0</Version>
-		<Authors>Victor David Sandiego</Authors>
-		<Description>Provides the ability to create wave form images from audio files.</Description>
-		<PackageProjectUrl>https://github.com/victor-david/restless-waveform</PackageProjectUrl>
+    <OutputType>Library</OutputType>
+    <PackageId>Restless.WaveForm</PackageId>
+    <AssemblyName>Restless.WaveForm</AssemblyName>
+    <RootNamespace>Restless.WaveForm</RootNamespace>
+    <Description>Provides the ability to create wave form images from audio files.</Description>
+    <PackageProjectUrl>https://github.com/victor-david/restless-waveform</PackageProjectUrl>
     <RepositoryUrl>https://github.com/victor-david/restless-waveform</RepositoryUrl>
-		<PackageTags>c# .net audio render</PackageTags>
-		<Copyright>2022 Restless Animal Development</Copyright>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<RootNamespace>Restless.WaveForm</RootNamespace>
-		<AssemblyName>Restless.WaveForm</AssemblyName>
-		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-		<LangVersion>9.0</LangVersion>
+    <Authors>Restless Animal Development</Authors>
+    <Company>Restless Animal Development</Company>
+    <LangVersion>9</LangVersion>
+    <Version>1.0.0</Version>
+    <Product>Restless WaveForm</Product>
+    <Title>Restless.WaveForm</Title>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <Copyright>Copyright © 2022 Restless Animal Development</Copyright>
+    <PackageTags>c# .net audio render</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

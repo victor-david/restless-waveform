@@ -5,6 +5,9 @@
     /// </summary>
     public class FirstCalculator : ISampleCalculator
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public string DisplayName => "First";
 
         /// <summary>

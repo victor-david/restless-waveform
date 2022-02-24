@@ -7,6 +7,9 @@ namespace Restless.WaveForm.Calculators
     /// </summary>
     public class MinCalculator : ISampleCalculator
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public string DisplayName => "Min";
 
         /// <summary>

@@ -10,6 +10,9 @@ namespace Restless.WaveForm.Renderer
     /// </summary>
     public class BarRenderer : Renderer
     {
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
         public override string DisplayName => "Bar";
 
         /// <summary>
@@ -20,7 +23,7 @@ namespace Restless.WaveForm.Renderer
         }
 
         /// <summary>
-        /// Performs the rendering operation
+        /// Performs the rendering operation.
         /// </summary>
         /// <param name="graphics">The graphics object used to draw the rendering</param>
         protected override void Render(Graphics graphics)

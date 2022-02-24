@@ -8,26 +8,59 @@ namespace Restless.WaveForm.Settings
     /// </summary>
     public static class Utility
     {
-        public static int Clamp(int value, int min, int max)
+        /// <summary>
+        /// Returns a value clamped between <paramref name="min"/> and <paramref name="max"/>, inclusive.
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="min">Minimum allowed</param>
+        /// <param name="max">Maximum allowed</param>
+        /// <returns>The clamped value</returns>
+        public static int Clamp(this int value, int min, int max)
         {
             return Math.Max(Math.Min(value, max), min);
         }
 
-        public static uint Clamp(uint value, uint min, uint max)
+        /// <summary>
+        /// Returns a value clamped between <paramref name="min"/> and <paramref name="max"/>, inclusive.
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="min">Minimum allowed</param>
+        /// <param name="max">Maximum allowed</param>
+        /// <returns>The clamped value</returns>
+        public static uint Clamp(this uint value, uint min, uint max)
         {
             return Math.Max(Math.Min(value, max), min);
         }
 
+        /// <summary>
+        /// Returns a value clamped between <paramref name="min"/> and <paramref name="max"/>, inclusive.
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="min">Minimum allowed</param>
+        /// <param name="max">Maximum allowed</param>
+        /// <returns>The clamped value</returns>
         public static long Clamp(long value, long min, long max)
         {
             return Math.Max(Math.Min(value, max), min);
         }
 
-        public static float Clamp(float value, float min, float max)
+        /// <summary>
+        /// Returns a value clamped between <paramref name="min"/> and <paramref name="max"/>, inclusive.
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="min">Minimum allowed</param>
+        /// <param name="max">Maximum allowed</param>
+        /// <returns>The clamped value</returns>
+        public static float Clamp(this float value, float min, float max)
         {
             return Math.Max(Math.Min(value, max), min);
         }
 
+        /// <summary>
+        /// Gets the sample count for the stream
+        /// </summary>
+        /// <param name="stream">The stream</param>
+        /// <returns>The total number of samples for the stream</returns>
         public static long SampleCount(this WaveStream stream)
         {
             int bytesPerSample = stream.WaveFormat.BitsPerSample / 8;
@@ -35,25 +68,25 @@ namespace Restless.WaveForm.Settings
         }
 
         /// <summary>
-        /// Gets an even integer value clamped between <paramref name="min"/> and <paramref name="max"/>.
+        /// Returns an even integer value clamped between <paramref name="min"/> and <paramref name="max"/>.
         /// </summary>
         /// <param name="value">The value</param>
         /// <param name="min">Min allowed.</param>
         /// <param name="max">Max allowed.</param>
         /// <returns>An even integer value clamped</returns>
-        public static int ClampEven(int value, int min, int max)
+        public static int ClampEven(this int value, int min, int max)
         {
             return Math.Max(Math.Min(GetEven(value), GetEven(max)), GetEven(min));
         }
 
         /// <summary>
-        /// Gets an even long integer value clamped between <paramref name="min"/> and <paramref name="max"/>.
+        /// Returns an even long integer value clamped between <paramref name="min"/> and <paramref name="max"/>.
         /// </summary>
         /// <param name="value">The value</param>
         /// <param name="min">Min allowed.</param>
         /// <param name="max">Max allowed.</param>
         /// <returns>An even long value clamped</returns>
-        public static long ClampEven(long value, long min, long max)
+        public static long ClampEven(this long value, long min, long max)
         {
             return Math.Max(Math.Min(GetEven(value), GetEven(max)), GetEven(min));
         }
