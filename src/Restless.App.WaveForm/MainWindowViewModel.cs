@@ -25,7 +25,6 @@ namespace Restless.App.Wave
         private double imageWidth;
         private bool autoImageWidth;
         private double volumeBoost;
-        private bool useDecibelScale;
         private bool isControlPanelEnabled;
         private RenderSettings selectedSetting;
         private IRenderer selectedRenderer;
@@ -183,19 +182,6 @@ namespace Restless.App.Wave
             set
             {
                 SetProperty(ref volumeBoost, value);
-                CreateVisualization();
-            }
-        }
-        /// <summary>
-        /// Gets or sets a boolean value that determines if a
-        /// decibel scale is applied to the peak provider.
-        /// </summary>
-        public bool UseDecibelScale
-        {
-            get => useDecibelScale;
-            set
-            {
-                SetProperty(ref useDecibelScale, value);
                 CreateVisualization();
             }
         }
@@ -362,7 +348,6 @@ namespace Restless.App.Wave
             setting.Width = (int)ImageWidth;
             setting.AutoWidth = AutoImageWidth;
             setting.VolumeBoost = (float)VolumeBoost;
-            setting.DecibelScale = UseDecibelScale;
             return setting;
         }
 

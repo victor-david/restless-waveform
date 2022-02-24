@@ -231,12 +231,9 @@ namespace Restless.WaveForm.Settings
         }
         #endregion
 
-
         /************************************************************************/
 
-
         #region Properties (others)
-
         /// <summary>
         /// Gets or sets the noise threshold.
         /// Absolute values less than this value are converted to zero.
@@ -251,15 +248,6 @@ namespace Restless.WaveForm.Settings
                     noiseThreshold = value;
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets or sets a value that determines if scale is based upon decibels.
-        /// </summary>
-        public bool DecibelScale
-        {
-            get;
-            set;
         }
         #endregion
 
@@ -349,7 +337,7 @@ namespace Restless.WaveForm.Settings
 
         #region Protected methods
         /// <summary>
-        /// Called when either <see cref="Height"/> or <see cref="BottomHeight"/> is set.
+        /// Called when <see cref="Height"/> is set.
         /// </summary>
         /// <remarks>
         /// Override if you need to take action on height changes.

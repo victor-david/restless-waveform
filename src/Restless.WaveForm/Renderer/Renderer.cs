@@ -60,8 +60,10 @@ namespace Restless.WaveForm.Renderer
         /// </summary>
         protected float CenterY => Settings.Height;
 
-
-        protected long TotalSamples
+        /// <summary>
+        /// Gets the total sample count
+        /// </summary>
+        protected long SampleCount
         {
             get;
             private set;
@@ -105,7 +107,7 @@ namespace Restless.WaveForm.Renderer
             Calculator = calculator ?? throw new ArgumentNullException(nameof(calculator));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            TotalSamples = stream.SampleCount();
+            SampleCount = stream.SampleCount();
             sampleProvider = stream.ToSampleProvider();
             Buffer = new float[BufferSize];
             return this;

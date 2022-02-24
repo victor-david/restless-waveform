@@ -3,11 +3,11 @@ using System.Drawing;
 namespace Restless.WaveForm.Settings
 {
     /// <summary>
-    /// Represents settings for <see cref="SineRenderer"/>
+    /// Represents settings for <see cref="Renderer.SineRenderer"/>
     /// </summary>
     /// <remarks>
     /// This class extends <see cref="RenderSettings"/> to provide a set of default values
-    /// that work decently with <see cref="SineRenderer"/>. You can still modify to customize the render result.
+    /// that work decently with <see cref="Renderer.SineRenderer"/>.
     /// </remarks>
     public class SineSettings : RenderSettings
     {
