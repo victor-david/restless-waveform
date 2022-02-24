@@ -36,10 +36,19 @@ namespace Restless.WaveForm.Renderer
             get;
         }
 
-        internal RenderResult(Image imageLeft, Image imageRight, int channels)
+        /// <summary>
+        /// Gets the number of samples for this result
+        /// </summary>
+        public long Samples
+        {
+            get;
+        }
+
+        internal RenderResult(Image imageLeft, Image imageRight, long samples, int channels)
         {
             ImageLeft = imageLeft ?? throw new ArgumentNullException(nameof(imageLeft));
             ImageRight = imageRight ?? throw new ArgumentNullException(nameof(imageRight));
+            Samples = samples;
             Channels = channels;
         }
     }

@@ -98,7 +98,7 @@ namespace Restless.WaveForm.Renderer
             long samples = stream.SampleCount();
             int channels = stream.WaveFormat.Channels;
 
-            RenderResult result = new(settings.CreateBitmapImage(samples, channels), settings.CreateBitmapImage(samples, channels), channels);
+            RenderResult result = new(settings.CreateBitmapImage(samples, channels), settings.CreateBitmapImage(samples, channels), samples, channels);
 
             using (Graphics gleft = Graphics.FromImage(result.ImageLeft))
             {
