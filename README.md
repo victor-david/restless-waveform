@@ -2,11 +2,9 @@
 
 **Restless WaveForm** enables you to render waveforms of audio files. Uses [NAudio](https://github.com/naudio/naudio) to extract the audio samples.
 
-
-This project was inspired by Mark Heath's [Wave Form Renderer](https://github.com/naudio/NAudio.WaveFormRenderer).
+[![Nuget](https://img.shields.io/nuget/v/Restless.WaveForm.svg?style=flat-square)](https://www.nuget.org/packages/Restless.WaveForm/)
 
 ## Features
-
 - Render mono and stereo audio
 - Supports several calculation strategies (max, min, average, RMS)
 - Built-in rendering styles, or create your own.
@@ -30,3 +28,7 @@ The solution includes two projects:
 
 - **Restless.WaveForm** - The library used for audio file rendering
 - **Restless.App.WaveForm** - A WPF demonstration app.
+
+## Acknowledgements
+
+This project was inspired by Mark Heath's [Wave Form Renderer](https://github.com/naudio/NAudio.WaveFormRenderer). Thank you Mark.
