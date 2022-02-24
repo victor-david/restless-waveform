@@ -19,7 +19,7 @@ namespace Restless.WaveForm.Settings
         private int lineThickness;
         private int actualLineThickness;
         private int centerLineThickness;
-        private float noiseThreshold;
+        private float sampleThreshold;
         #endregion
 
         /************************************************************************/
@@ -54,7 +54,7 @@ namespace Restless.WaveForm.Settings
         public const int MaxCenterLineThickness = 5;
         public const int DefaultCenterLineThickness = 1;
 
-        public const float DefaultNoiseThreshold = 0.001f;
+        public const float DefaultSampleThreshold = 0.001f;
         #endregion
 
         /************************************************************************/
@@ -235,17 +235,27 @@ namespace Restless.WaveForm.Settings
 
         #region Properties (others)
         /// <summary>
-        /// Gets or sets the noise threshold.
-        /// Absolute values less than this value are converted to zero.
+        /// Gets or sets a value that determines if <see cref="SampleThreshold"/> is applied.
+        /// The default value is false.
         /// </summary>
-        public float NoiseThreshold
+        public bool UseSampleThreshold
         {
-            get => noiseThreshold;
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the sample threshold. If <see cref="UseSampleThreshold"/>
+        /// is true, absolute values less than this value are set to zero.
+        /// </summary>
+        public float SampleThreshold
+        {
+            get => sampleThreshold;
             set
             {
-                if (value > 0.0)
+                if (value > 0)
                 {
-                    noiseThreshold = value;
+                    sampleThreshold = value;
                 }
             }
         }
@@ -278,7 +288,7 @@ namespace Restless.WaveForm.Settings
             SecondaryLineColor = Color.LightSlateGray;
             CenterLineColor = Color.DarkBlue;
             
-            NoiseThreshold = DefaultNoiseThreshold;
+            SampleThreshold = DefaultSampleThreshold;
         }
         #endregion
 

@@ -35,7 +35,7 @@ namespace Restless.WaveForm.Renderer
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float value = Math.Abs(GetCalculatedSamplesValue(idx) * Settings.Height * Settings.VolumeBoost);
+                    float value = Math.Abs(GetAppliedScaledValue(GetCalculatorValue(idx)));
                     float y1 = CenterY - value;
                     float y2 = CenterY + value;
 

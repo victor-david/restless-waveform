@@ -180,9 +180,31 @@ namespace Restless.WaveForm.Renderer
         /// <remarks>
         /// This is a convenience method for derived classes that require calculated sample values.
         /// </remarks>
-        protected float GetCalculatedSamplesValue(int startIdx)
+        protected float GetCalculatorValue(int startIdx)
         {
-            return Calculator.Calculate(Buffer, startIdx, startIdx + Settings.SampleResolution);
+            float value = Calculator.Calculate(Buffer, startIdx, startIdx + Settings.SampleResolution);
+            if (Math.Abs(value) < Settings.SampleThreshold)
+            {
+                value = 0;
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Applies the sample threshold (if activated) and scales <paramref name="rawValue"/>
+        /// according to <see cref="RenderSettings.Height"/> and <see cref="RenderSettings.VolumeBoost"/>
+        /// </summary>
+        /// <param name="rawValue">The raw sample value</param>
+        /// <returns>The scaled value</returns>
+        /// <remarks>
+        /// This is a convenience method for derived classes that enables them
+        /// to obtain a scaled value based upon the sample threshold, height and volume boost.
+        /// </remarks>
+        protected float GetAppliedScaledValue(float rawValue)
+        {
+            return Settings.UseSampleThreshold && Math.Abs(rawValue) < Settings.SampleThreshold
+                ? 0
+                : rawValue * Settings.Height * Settings.VolumeBoost;
         }
         #endregion
 
