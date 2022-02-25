@@ -3,6 +3,7 @@ using Restless.WaveForm.Calculators;
 using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Restless.WaveForm.Renderer
 {
@@ -139,6 +140,8 @@ namespace Restless.WaveForm.Renderer
             {
                 throw new ArgumentNullException(nameof(graphics));
             }
+
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
 
             graphics.FillRectangle(Settings.GetBackgroundBrush(), 0, 0, Image.Width, Image.Height);
 
