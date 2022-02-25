@@ -192,12 +192,7 @@ namespace Restless.WaveForm.Renderer
         /// </remarks>
         protected float GetCalculatorValue(int startIdx)
         {
-            float value = Calculator.Calculate(Buffer, startIdx, startIdx + Settings.SampleResolution);
-            if (Math.Abs(value) < Settings.SampleThreshold)
-            {
-                value = 0;
-            }
-            return value;
+            return Calculator.Calculate(Buffer, startIdx, startIdx + Settings.ActualSampleResolution);
         }
 
         /// <summary>

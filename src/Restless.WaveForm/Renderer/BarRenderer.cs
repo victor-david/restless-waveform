@@ -1,7 +1,6 @@
 ﻿using Restless.WaveForm.Settings;
 using System;
 using System.Drawing;
-using System.Linq;
 
 namespace Restless.WaveForm.Renderer
 {

@@ -427,19 +427,6 @@ namespace Restless.WaveForm.Settings
         }
 
         /// <summary>
-        /// From a derived class, creates a pen
-        /// </summary>
-        /// <param name="height">Height</param>
-        /// <param name="startColor">Starting color</param>
-        /// <param name="endColor">Ending color</param>
-        /// <returns>A gradient pen</returns>
-        protected Pen CreateGradientPen(int height, Color startColor, Color endColor)
-        {
-            LinearGradientBrush brush = new(new Point(0, 0), new Point(0, height), startColor, endColor);
-            return new Pen(brush);
-        }
-
-        /// <summary>
         /// Gets a value for <see cref="ActualLineThickness"/>
         /// </summary>
         /// <param name="actualZoomX">The actual zoom x value</param>
