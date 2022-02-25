@@ -21,7 +21,7 @@ namespace Restless.WaveForm.Calculators
         /// <returns>A value calculated from the range</returns>
         public float Calculate(float[] buffer, int startIdx, int endIdx)
         {
-            return buffer[Math.Max(0, endIdx - 1)];
+            return buffer[Math.Min(Math.Max(0, endIdx - 1), buffer.Length - 1)];
         }
     }
 }

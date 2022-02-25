@@ -21,6 +21,9 @@ namespace Restless.WaveForm.Calculators
         /// <returns>A value calculated from the range</returns>
         public float Calculate(float[] buffer, int startIdx, int endIdx)
         {
+            startIdx = Math.Min(Math.Max(0, startIdx), buffer.Length - 1);
+            endIdx = Math.Min(Math.Max(0, endIdx), buffer.Length - 1);
+
             double sum = 0.0;
             for (int idx = startIdx; idx < endIdx; idx++)
             {

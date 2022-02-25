@@ -1,4 +1,6 @@
-﻿namespace Restless.WaveForm.Calculators
+﻿using System;
+
+namespace Restless.WaveForm.Calculators
 {
     /// <summary>
     /// Represents a sample calculator that returns the first value in the range.
@@ -19,7 +21,7 @@
         /// <returns>A value calculated from the range</returns>
         public float Calculate(float[] buffer, int startIdx, int endIdx)
         {
-            return buffer[startIdx];
+            return buffer[Math.Min(Math.Max(0, startIdx), buffer.Length - 1)];
         }
     }
 }
