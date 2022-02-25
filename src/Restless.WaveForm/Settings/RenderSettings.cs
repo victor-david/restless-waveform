@@ -215,7 +215,7 @@ namespace Restless.WaveForm.Settings
         /// during the image preparation operation. Only <see cref="ActualSampleResolution"/>
         /// will be changed if needed.
         /// </remarks>
-        protected bool ScaleZoomX
+        public bool ScaleZoomX
         {
             get;
             set;
