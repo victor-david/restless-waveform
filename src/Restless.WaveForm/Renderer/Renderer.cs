@@ -153,7 +153,7 @@ namespace Restless.WaveForm.Renderer
                         sampleProvider = sampleProvider.ToMono(0.5f, 0);
                         break;
                     case Channel.Right:
-                        sampleProvider = sampleProvider.ToMono(0, 1.5f);
+                        sampleProvider = sampleProvider.ToMono(0, 0.5f);
                         break;
                     default:
                         break;

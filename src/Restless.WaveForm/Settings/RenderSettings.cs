@@ -461,8 +461,6 @@ namespace Restless.WaveForm.Settings
         {
             float rawValue = Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualXStep;
             return (long)rawValue;
-
-            /// return (long)Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX;
         }
 
         private long GetClampedAutoImageWidth(long sampleCount, int channels)

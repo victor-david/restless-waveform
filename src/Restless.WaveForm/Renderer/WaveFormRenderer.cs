@@ -105,7 +105,10 @@ namespace Restless.WaveForm.Renderer
                 using (Graphics gright = Graphics.FromImage(result.ImageRight))
                 {
                     renderer.Init(result.ImageLeft, stream, calculator, settings).Render(Channel.Left, gleft);
-                    renderer.Init(result.ImageRight, stream, calculator, settings).Render(Channel.Right, gright);
+                    if (channels == 2)
+                    {
+                        renderer.Init(result.ImageRight, stream, calculator, settings).Render(Channel.Right, gright);
+                    }
                 }
             }
             return result;
