@@ -57,6 +57,17 @@ namespace Restless.WaveForm.Settings
         }
 
         /// <summary>
+        /// Returns a value rounded to the specified number of decimal points
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="decimals">Number of decimal points (clamped 0..12, inclusive)</param>
+        /// <returns>The rounded value</returns>
+        public static float Round(this float value, int decimals)
+        {
+            return (float)Math.Round(value, decimals.Clamp(0, 12));
+        }
+
+        /// <summary>
         /// Gets the sample count for the stream
         /// </summary>
         /// <param name="stream">The stream</param>

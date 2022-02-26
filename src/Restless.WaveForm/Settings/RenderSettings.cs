@@ -81,6 +81,10 @@ namespace Restless.WaveForm.Settings
         /// The default value for <see cref="XStep"/>
         /// </summary>
         public const float DefaultXStep = 2;
+        /// <summary>
+        /// The number of decimal points for <see cref="XStep"/>
+        /// </summary>
+        public const int XStepDecimals = 2;
 
         /// <summary>
         /// The minimum value for <see cref="VolumeBoost"/>
@@ -162,11 +166,7 @@ namespace Restless.WaveForm.Settings
         public int Height
         {
             get => height;
-            set
-            {
-                height = value.ClampEven(MinHeight, MaxHeight);
-                OnHeightSet();
-            }
+            set => height = value.Clamp(MinHeight, MaxHeight);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Restless.WaveForm.Settings
         public float XStep
         {
             get => xStepX;
-            set => xStepX = value.Clamp(MinXStep, MaxXStep);
+            set => xStepX = value.Clamp(MinXStep, MaxXStep).Round(XStepDecimals);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Restless.WaveForm.Settings
         public float ActualXStep
         {
             get => actualXStep;
-            private set => actualXStep = value.Clamp(MinXStep, MaxXStep);
+            private set => actualXStep = value.Clamp(MinXStep, MaxXStep).Round(XStepDecimals);
         }
 
         /// <summary>
@@ -417,17 +417,6 @@ namespace Restless.WaveForm.Settings
 
         #region Protected methods
         /// <summary>
-        /// Called when <see cref="Height"/> is set.
-        /// </summary>
-        /// <remarks>
-        /// Override if you need to take action on height changes.
-        /// The base implementation does nothing.
-        /// </remarks>
-        protected virtual void OnHeightSet()
-        {
-        }
-
-        /// <summary>
         /// Gets a value for <see cref="ActualLineThickness"/>
         /// </summary>
         /// <param name="actualZoomX">The actual zoom x value</param>
@@ -450,12 +439,13 @@ namespace Restless.WaveForm.Settings
         private void PrepareForImageWidth(long sampleCount, int channels)
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
+            ActualXStep = 0.5f;
             long width = GetUnClampedAutoImageWidth(sampleCount, channels);
             if (ScaleXStep)
             {
                 while (width > maxWidth && ActualXStep > MinXStep)
                 {
-                    ActualXStep = (float)Math.Round(ActualXStep - 0.1f, 3);
+                    ActualXStep = (ActualXStep - 0.01f).Round(XStepDecimals);
                     ActualLineThickness = GetActualLineThickness(ActualXStep, ActualLineThickness);
                     width = GetUnClampedAutoImageWidth(sampleCount, channels);
                 }
