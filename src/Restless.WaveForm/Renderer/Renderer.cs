@@ -150,10 +150,10 @@ namespace Restless.WaveForm.Renderer
                 switch (channel)
                 {
                     case Channel.Left:
-                        sampleProvider = sampleProvider.ToMono(0.5f, 0);
+                        sampleProvider = sampleProvider.ToMono(1, 0);
                         break;
                     case Channel.Right:
-                        sampleProvider = sampleProvider.ToMono(0, 0.5f);
+                        sampleProvider = sampleProvider.ToMono(0, 1);
                         break;
                     default:
                         break;
