@@ -21,7 +21,7 @@ namespace Restless.WaveForm.Settings
             PrimaryLineColor = Color.Red;
             LineThickness = 1;
             CenterLineColor = Color.Black;
-            ZoomX = 2;
+            XStep = 2;
         }
     }
 }

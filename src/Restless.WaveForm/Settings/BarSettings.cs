@@ -24,7 +24,7 @@ namespace Restless.WaveForm.Settings
             LineThickness = 4;
             CenterLineColor = Color.DarkSlateGray;
             CenterLineThickness = 1;
-            ZoomX = 5;
+            XStep = 5;
         }
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace Restless.WaveForm.Settings
             Height = 172;
             LineThickness = 7;
             CenterLineThickness = 0;
-            ZoomX = 8;
-            ScaleZoomX = false;
+            XStep = 8;
+            ScaleXStep = false;
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace Restless.WaveForm.Settings
         /// <param name="actualZoomX">The actual zoom x</param>
         /// <param name="actualLineThickness">The cuurent actual line thickness</param>
         /// <returns>A new line thickness value.</returns>
-        protected override int GetActualLineThickness(int actualZoomX, int actualLineThickness)
+        protected override float GetActualLineThickness(float actualZoomX, float actualLineThickness)
         {
-            return actualZoomX - 1;
+            return actualZoomX - 1f;
         }
         #endregion
     }

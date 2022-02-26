@@ -26,7 +26,7 @@ namespace Restless.WaveForm.Renderer
         /// <param name="graphics">The graphics object used to draw the rendering</param>
         protected override void Render(Graphics graphics)
         {
-            int x = 0;
+            float x = 0;
             Pen pen = Settings.GetPen(RenderPenType.PrimaryLine);
 
             int sampleCount = ReadSamples();
@@ -38,9 +38,9 @@ namespace Restless.WaveForm.Renderer
                     float y1 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx));
                     float y2 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx + Settings.ActualSampleResolution));
 
-                    graphics.DrawLine(pen, x, y1, x + Settings.ActualZoomX, y2);
+                    graphics.DrawLine(pen, x, y1, x + Settings.ActualXStep, y2);
 
-                    x += Settings.ActualZoomX;
+                    x += Settings.ActualXStep;
                 }
                 sampleCount = ReadSamples();
             }
