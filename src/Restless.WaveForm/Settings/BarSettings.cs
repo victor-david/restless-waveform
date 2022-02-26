@@ -28,30 +28,12 @@ namespace Restless.WaveForm.Settings
         }
 
         /// <summary>
-        /// Private constructor for fat style
-        /// </summary>
-        /// <param name="displayName"></param>
-        private BarSettings(string displayName)
-        {
-            DisplayName = displayName;
-            Height = 172;
-            LineThickness = 7;
-            CenterLineThickness = 0;
-            XStep = 8;
-            ScaleXStep = false;
-        }
-
-        /// <summary>
         /// Returns an instance of the <see cref="BarSettings"/> using a default set of gray colors.
         /// </summary>
         /// <returns>An instance of <see cref="BarSettings"/></returns>
         public static BarSettings CreateFatGray()
         {
-            return new BarSettings("Fat Bar (Gray)")
-            {
-                PrimaryLineColor = Color.FromArgb(52, 52, 52),
-                SecondaryLineColor = Color.FromArgb(154, 154, 154),
-            };
+            return CreateFat("Fat Bar (Gray)", Color.FromArgb(52, 52, 52), Color.FromArgb(154, 154, 154));
         }
 
         /// <summary>
@@ -60,10 +42,21 @@ namespace Restless.WaveForm.Settings
         /// <returns>An instance of <see cref="BarSettings"/></returns>
         public static BarSettings CreateFatOrange()
         {
-            return new BarSettings("Fat Bar (Orange)")
+            return CreateFat("Fat Bar (Orange)", Color.FromArgb(255, 76, 0), Color.FromArgb(255, 171, 141));
+        }
+
+        private static BarSettings CreateFat(string displayName, Color primary, Color secondary)
+        {
+            return new BarSettings()
             {
-                PrimaryLineColor = Color.FromArgb(255, 76, 0),
-                SecondaryLineColor = Color.FromArgb(255, 171, 141),
+                DisplayName = displayName,
+                Height = 172,
+                PrimaryLineColor = primary,
+                SecondaryLineColor = secondary,
+                LineThickness = 7,
+                CenterLineThickness = 0,
+                XStep = 8,
+                ScaleXStep = false
             };
         }
         #endregion

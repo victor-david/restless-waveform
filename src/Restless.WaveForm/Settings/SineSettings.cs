@@ -18,7 +18,7 @@ namespace Restless.WaveForm.Settings
         {
             DisplayName = "Sine";
             Height = 112;
-            PrimaryLineColor = Color.Red;
+            PrimaryLineColor = Color.DarkSlateGray;
             LineThickness = 1;
             CenterLineColor = Color.Black;
             XStep = 2;

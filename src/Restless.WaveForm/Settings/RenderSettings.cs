@@ -439,7 +439,6 @@ namespace Restless.WaveForm.Settings
         private void PrepareForImageWidth(long sampleCount, int channels)
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
-            ActualXStep = 0.5f;
             long width = GetUnClampedAutoImageWidth(sampleCount, channels);
             if (ScaleXStep)
             {
