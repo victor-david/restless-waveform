@@ -8,27 +8,36 @@
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     Title="Demo App"
-    Height="620" Width="1248">
+    Height="640" Width="1248">
     <Grid Margin="8,2">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Grid.Resources>
+             <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
+                <Setter Property="Width" Value="136"/>
+            </Style>           
+            
+            <Style TargetType="Slider" BasedOn="{StaticResource DefaultSliderStyle}">
+                <Setter Property="Width" Value="150"/>
+            </Style>
+        </Grid.Resources>
 
-        <!-- Open button and file name -->
+        <!-- Open button -->
         <Grid IsEnabled="{Binding IsControlPanelEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <Button Content="Open" ToolTip="Open an audio file for rendering" Command="{Binding OpenCommand}"/>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{Binding SelectedFile}"/>
+
         </Grid>
 
         <Separator Grid.Row="1"/>
@@ -41,17 +50,14 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.Resources>
-                <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
-                    <Setter Property="Width" Value="164"/>
-                </Style>
-            </Grid.Resources>
 
             <!-- Renderers -->
             <TextBlock Text="Renderer"/>
@@ -98,21 +104,40 @@
                     Maximum="{x:Static vm:MainWindowViewModel.MaxImageWidth}"
                     Value="{Binding ImageWidth, Delay=500}"/>
             </Grid>
-                  
+
+            <!-- Zoom X -->
             <TextBlock Grid.Column="4">
-                <Run Text="Boost"/>
-                <Run Text="{Binding VolumeBoost, Mode=OneWay, StringFormat=N2}"/>
+                <Run Text="Zoom (X)"/>
+                <Run Text="{Binding ZoomX, Mode=OneWay, StringFormat=N2}"/>
             </TextBlock>
             <Slider 
                 Grid.Row="2" Grid.Column="4"
+                Minimum="{x:Static vm:MainWindowViewModel.MinZoomX}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxZoomX}"
+                Value="{Binding ZoomX, Delay=500}"/>
+
+            <!-- Zoom Y -->
+            <TextBlock Grid.Column="5">
+                <Run Text="Zoom (Y)"/>
+                <Run Text="{Binding ZoomY, Mode=OneWay, StringFormat=N2}"/>
+            </TextBlock>
+            <Slider 
+                Grid.Row="2" Grid.Column="5"
+                Minimum="{x:Static vm:MainWindowViewModel.MinZoomY}"
+                Maximum="{x:Static vm:MainWindowViewModel.MaxZoomY}"
+                Value="{Binding ZoomY, Delay=500}"/>
+
+            <!-- Volume Boost -->
+            <TextBlock Grid.Column="6">
+                <Run Text="Volume"/>
+                <Run Text="{Binding VolumeBoost, Mode=OneWay, StringFormat=N2}"/>
+            </TextBlock>
+            <Slider 
+                Grid.Row="2" Grid.Column="6"
                 Minimum="{x:Static vm:MainWindowViewModel.MinVolumeBoost}"
                 Maximum="{x:Static vm:MainWindowViewModel.MaxVolumeBoost}"
                 Value="{Binding VolumeBoost, Delay=500}"/>
-
-            <TextBlock Grid.Column="5" Grid.RowSpan="2" HorizontalAlignment="Right">
-                <Run Foreground="Firebrick" Text="{Binding SampleCount, Mode=OneWay, StringFormat=N0}"/>
-                <Run Text="samples"/>
-            </TextBlock>
+            
         </Grid>
 
         <!-- Images -->
@@ -129,6 +154,15 @@
                 <Image Grid.Row="1" Source="{Binding FileVisualRight}"/>
             </Grid>
         </ScrollViewer>
+
+        <StatusBar Grid.Row="4">
+            <TextBlock Text="{Binding SelectedFile, Mode=OneWay}"/>
+            <Separator/>
+            <TextBlock HorizontalAlignment="Right">
+                <Run Foreground="Firebrick" Text="{Binding SampleCount, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="samples"/>
+            </TextBlock>
+        </StatusBar>
 
     </Grid>
 </Window>

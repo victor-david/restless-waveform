@@ -28,18 +28,20 @@ namespace Restless.WaveForm.Renderer
         {
             float x = 0;
             Pen pen = Settings.GetPen(RenderPenType.PrimaryLine);
-
+            int count = 0;
             int sampleCount = ReadSamples();
+            float y1;
+            float y2 = 0;
 
             while (sampleCount > 0)
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx));
-                    float y2 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx + Settings.ActualSampleResolution));
-
-                    graphics.DrawLine(pen, x, y1, x + Settings.ActualXStep, y2);
-
+                    y1 = count == 0 ? CenterY - GetAppliedScaledValue(GetCalculatorValue(idx)) : y2;
+                    y2 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx + Settings.ActualSampleResolution));
+                    float x2 = x + Settings.ActualXStep;
+                    graphics.DrawLine(pen, x, y1, x2, y2);
+                    count++;
                     x += Settings.ActualXStep;
                 }
                 sampleCount = ReadSamples();
