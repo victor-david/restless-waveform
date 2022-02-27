@@ -158,9 +158,20 @@
         <StatusBar Grid.Row="4">
             <TextBlock Text="{Binding SelectedFile, Mode=OneWay}"/>
             <Separator/>
-            <TextBlock HorizontalAlignment="Right">
+            <TextBlock>
                 <Run Foreground="Firebrick" Text="{Binding SampleCount, Mode=OneWay, StringFormat=N0}"/>
                 <Run Text="samples"/>
+                <Run Text="@"/>
+                <Run Foreground="Firebrick" Text="{Binding ActualSampleResolution, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="chunk size"/>
+            </TextBlock>
+            
+            <Separator/>
+            <TextBlock>
+                <Run Text="Image W:"/>
+                <Run Foreground="Firebrick" Text="{Binding ActualImageWidth, Mode=OneWay, StringFormat=N0}"/>
+                <Run Text="H:"/>
+                <Run Foreground="Firebrick" Text="{Binding ActualImageHeight, Mode=OneWay, StringFormat=N0}"/>
             </TextBlock>
         </StatusBar>
 

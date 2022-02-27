@@ -229,12 +229,27 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
+        /// Gets the actual image width
+        /// </summary>
+        public double ActualImageWidth => FileVisualLeft != null ? FileVisualLeft.Width : 0;
+
+        /// <summary>
+        /// Gets the actual image height
+        /// </summary>
+        public double ActualImageHeight => FileVisualLeft != null ? FileVisualLeft.Height : 0;
+
+        /// <summary>
         /// Gets the image source for the visual representation of the rendered file (left channel).
         /// </summary>
         public ImageSource FileVisualLeft
         {
             get => fileVisualLeft;
-            private set => SetProperty(ref fileVisualLeft, value);
+            private set
+            {
+                SetProperty(ref fileVisualLeft, value);
+                OnPropertyChanged(nameof(ActualImageWidth));
+                OnPropertyChanged(nameof(ActualImageHeight));
+            }
         }
 
         /// <summary>
@@ -276,6 +291,11 @@ namespace Restless.App.Wave
             get => renderTextVisibility;
             private set => SetProperty(ref renderTextVisibility, value);
         }
+
+        /// <summary>
+        /// Gets the actual sample resolution used to render the image
+        /// </summary>
+        public int ActualSampleResolution => SelectedWaveFormSetting != null ? SelectedWaveFormSetting.ActualSampleResolution : 0;
         #endregion
 
         /************************************************************************/
@@ -374,6 +394,7 @@ namespace Restless.App.Wave
                 SampleCount = result.SampleCount;
                 FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageLeft);
                 FileVisualRight = result.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageRight) : null;
+                OnPropertyChanged(nameof(ActualSampleResolution));
             }
 
             catch (Exception ex)
