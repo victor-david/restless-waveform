@@ -8,7 +8,7 @@ using System.Drawing.Drawing2D;
 namespace Restless.WaveForm.Renderer
 {
     /// <summary>
-    /// Base class for renderers
+    /// Base class for renderers. This class must be inherited.
     /// </summary>
     public abstract class Renderer : IRenderer
     {

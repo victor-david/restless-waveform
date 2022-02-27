@@ -12,8 +12,8 @@ namespace Restless.WaveForm.Renderer
     /// </summary>
     /// <remarks>
     /// The methods of this class return two images, one for the left channel and one for the right.
-    /// If the wave stream is a single channel, both images are the same. The consumer
-    /// can decide based on the result (which contains the number of channels) whether to use one image or both.
+    /// If the wave stream is a single channel, the right image is blank. The consumer can decide 
+    /// based on the result (which contains the number of channels) whether to use one image or both.
     /// </remarks>
     public static class WaveFormRenderer
     {
