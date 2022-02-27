@@ -6,8 +6,12 @@
 
 ## Features
 - Render mono and stereo audio
-- Supports several calculation strategies (max, min, average, RMS)
+- Render bar or sine
+- Zoom on x and/or y axis
+- Volume boost
+- Various calculation strategies (max, min, average, rms)
 - Built-in rendering styles, or create your own.
+- Automatic image width, or specify your width
  
 ## Screen shots
 
