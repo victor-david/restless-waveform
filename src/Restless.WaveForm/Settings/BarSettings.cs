@@ -24,21 +24,7 @@ namespace Restless.WaveForm.Settings
             LineThickness = 4;
             CenterLineColor = Color.DarkSlateGray;
             CenterLineThickness = 1;
-            ZoomX = 5;
-        }
-
-        /// <summary>
-        /// Private constructor for fat style
-        /// </summary>
-        /// <param name="displayName"></param>
-        private BarSettings(string displayName)
-        {
-            DisplayName = displayName;
-            Height = 172;
-            LineThickness = 7;
-            CenterLineThickness = 0;
-            ZoomX = 8;
-            ScaleZoomX = false;
+            XStep = 5;
         }
 
         /// <summary>
@@ -47,11 +33,7 @@ namespace Restless.WaveForm.Settings
         /// <returns>An instance of <see cref="BarSettings"/></returns>
         public static BarSettings CreateFatGray()
         {
-            return new BarSettings("Fat Bar (Gray)")
-            {
-                PrimaryLineColor = Color.FromArgb(52, 52, 52),
-                SecondaryLineColor = Color.FromArgb(154, 154, 154),
-            };
+            return CreateFat("Fat Bar (Gray)", Color.FromArgb(52, 52, 52), Color.FromArgb(154, 154, 154));
         }
 
         /// <summary>
@@ -60,10 +42,21 @@ namespace Restless.WaveForm.Settings
         /// <returns>An instance of <see cref="BarSettings"/></returns>
         public static BarSettings CreateFatOrange()
         {
-            return new BarSettings("Fat Bar (Orange)")
+            return CreateFat("Fat Bar (Orange)", Color.FromArgb(255, 76, 0), Color.FromArgb(255, 171, 141));
+        }
+
+        private static BarSettings CreateFat(string displayName, Color primary, Color secondary)
+        {
+            return new BarSettings()
             {
-                PrimaryLineColor = Color.FromArgb(255, 76, 0),
-                SecondaryLineColor = Color.FromArgb(255, 171, 141),
+                DisplayName = displayName,
+                Height = 172,
+                PrimaryLineColor = primary,
+                SecondaryLineColor = secondary,
+                LineThickness = 7,
+                CenterLineThickness = 0,
+                XStep = 8,
+                ScaleXStep = false
             };
         }
         #endregion
@@ -77,9 +70,9 @@ namespace Restless.WaveForm.Settings
         /// <param name="actualZoomX">The actual zoom x</param>
         /// <param name="actualLineThickness">The cuurent actual line thickness</param>
         /// <returns>A new line thickness value.</returns>
-        protected override int GetActualLineThickness(int actualZoomX, int actualLineThickness)
+        protected override float GetActualLineThickness(float actualZoomX, float actualLineThickness)
         {
-            return actualZoomX - 1;
+            return actualZoomX - 1f;
         }
         #endregion
     }

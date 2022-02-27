@@ -20,10 +20,12 @@ namespace Restless.App.Wave
     public class MainWindowViewModel : ObservableObject
     {
         #region Private
-        private string selectedFile;
+        private string selectedPath;
         private long sampleCount;
         private double imageWidth;
         private bool autoImageWidth;
+        private double zoomX;
+        private double zoomY;
         private double volumeBoost;
         private bool isControlPanelEnabled;
         private RenderSettings selectedSetting;
@@ -41,6 +43,14 @@ namespace Restless.App.Wave
         public const double MinImageWidth = RenderSettings.MinWidth;
         public const double MaxImageWidth = RenderSettings.MaxWidth;
         public const double DefaultImageWidth = RenderSettings.DefaultWidth;
+
+        public const double MinZoomX = RenderSettings.MinZoomX;
+        public const double MaxZoomX = RenderSettings.MaxZoomX;
+        public const double DefaultZoomX = RenderSettings.DefaultZoomX;
+
+        public const double MinZoomY = RenderSettings.MinZoomY;
+        public const double MaxZoomY = RenderSettings.MaxZoomY;
+        public const double DefaultZoomY = RenderSettings.DefaultZoomY;
 
         public const double MinVolumeBoost = RenderSettings.MinVolumeBoost;
         public const double MaxVolumeBoost = RenderSettings.MaxVolumeBoost;
@@ -61,15 +71,21 @@ namespace Restless.App.Wave
         /// <summary>
         /// Gets the currently selected file name.
         /// </summary>
-        public string SelectedFile
+        public string SelectedPath
         {
-            get => selectedFile;
+            get => selectedPath;
             private set
             {
-                SetProperty(ref selectedFile, value);
+                SetProperty(ref selectedPath, value);
+                OnPropertyChanged(nameof(SelectedFile));
                 CreateVisualization();
             }
         }
+
+        /// <summary>
+        /// Gets the selected file name (file only, no path)
+        /// </summary>
+        public string SelectedFile => Path.GetFileName(SelectedPath);
 
         /// <summary>
         /// Gets the sample count.
@@ -174,6 +190,32 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
+        /// Gets or sets the x-axis zoom that is applied to the visualization.
+        /// </summary>
+        public double ZoomX
+        {
+            get => zoomX;
+            set
+            {
+                SetProperty(ref zoomX, value);
+                CreateVisualization();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the y-axis zoom that is applied to the visualization.
+        /// </summary>
+        public double ZoomY
+        {
+            get => zoomY;
+            set
+            {
+                SetProperty(ref zoomY, value);
+                CreateVisualization();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the volume boost that is applied to the visualization.
         /// </summary>
         public double VolumeBoost
@@ -187,12 +229,27 @@ namespace Restless.App.Wave
         }
 
         /// <summary>
+        /// Gets the actual image width
+        /// </summary>
+        public double ActualImageWidth => FileVisualLeft != null ? FileVisualLeft.Width : 0;
+
+        /// <summary>
+        /// Gets the actual image height
+        /// </summary>
+        public double ActualImageHeight => FileVisualLeft != null ? FileVisualLeft.Height : 0;
+
+        /// <summary>
         /// Gets the image source for the visual representation of the rendered file (left channel).
         /// </summary>
         public ImageSource FileVisualLeft
         {
             get => fileVisualLeft;
-            private set => SetProperty(ref fileVisualLeft, value);
+            private set
+            {
+                SetProperty(ref fileVisualLeft, value);
+                OnPropertyChanged(nameof(ActualImageWidth));
+                OnPropertyChanged(nameof(ActualImageHeight));
+            }
         }
 
         /// <summary>
@@ -234,6 +291,11 @@ namespace Restless.App.Wave
             get => renderTextVisibility;
             private set => SetProperty(ref renderTextVisibility, value);
         }
+
+        /// <summary>
+        /// Gets the actual sample resolution used to render the image
+        /// </summary>
+        public int ActualSampleResolution => SelectedWaveFormSetting != null ? SelectedWaveFormSetting.ActualSampleResolution : 0;
         #endregion
 
         /************************************************************************/
@@ -243,6 +305,8 @@ namespace Restless.App.Wave
         {
             ImageWidth = DefaultImageWidth;
             AutoImageWidth = RenderSettings.DefaultAutoWidth;
+            ZoomX = DefaultZoomX;
+            ZoomY = DefaultZoomY;
             VolumeBoost = DefaultVolumeBoost;
             RenderTextVisibility = Visibility.Collapsed;
             IsControlPanelEnabled = true;
@@ -303,13 +367,13 @@ namespace Restless.App.Wave
 #endif
             if (dialog.ShowDialog() == true)
             {
-                SelectedFile = dialog.FileName;
+                SelectedPath = dialog.FileName;
             }
         }
 
         private void CreateVisualization()
         {
-            if (!string.IsNullOrEmpty(SelectedFile) && File.Exists(SelectedFile) && SelectedRenderer != null && SelectedCalculator != null)
+            if (!string.IsNullOrEmpty(SelectedPath) && File.Exists(SelectedPath) && SelectedRenderer != null && SelectedCalculator != null)
             {
                 CreateVisualizationAsync();
             }
@@ -322,7 +386,7 @@ namespace Restless.App.Wave
             {
                 SetRenderInProgress(true);
 
-                using (AudioFileReader waveStream = new(SelectedFile))
+                using (AudioFileReader waveStream = new(SelectedPath))
                 {
                     result = await WaveFormRenderer.CreateAsync(SelectedRenderer, waveStream, SelectedCalculator, GetRendererSettings());
                 }
@@ -330,6 +394,7 @@ namespace Restless.App.Wave
                 SampleCount = result.SampleCount;
                 FileVisualLeft = CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageLeft);
                 FileVisualRight = result.Channels == 2 ? CreateBitmapSourceFromGdiBitmap((Bitmap)result.ImageRight) : null;
+                OnPropertyChanged(nameof(ActualSampleResolution));
             }
 
             catch (Exception ex)
@@ -347,6 +412,8 @@ namespace Restless.App.Wave
             RenderSettings setting = SelectedWaveFormSetting;
             setting.Width = (int)ImageWidth;
             setting.AutoWidth = AutoImageWidth;
+            setting.ZoomX = (float)ZoomX;
+            setting.ZoomY = (float)ZoomY;
             setting.VolumeBoost = (float)VolumeBoost;
             return setting;
         }

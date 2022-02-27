@@ -14,10 +14,13 @@ namespace Restless.WaveForm.Settings
         private int width;
         private int height;
         private int sampleResolution;
-        private int zoomX;
+        private float xStepX;
+        private float actualXStep;
+        private float zoomX;
+        private float zoomY;
         private float volumeBoost;
-        private int lineThickness;
-        private int actualLineThickness;
+        private float lineThickness;
+        private float actualLineThickness;
         private int centerLineThickness;
         private float sampleThreshold;
         #endregion
@@ -69,17 +72,51 @@ namespace Restless.WaveForm.Settings
         public const int DefaultSampleResolution = 8;
 
         /// <summary>
+        /// The minimum value for <see cref="XStep"/>
+        /// </summary>
+        public const float MinXStep = 0.01f;
+        /// <summary>
+        /// The maximum value for <see cref="XStep"/>
+        /// </summary>
+        public const float MaxXStep = 8;
+        /// <summary>
+        /// The default value for <see cref="XStep"/>
+        /// </summary>
+        public const float DefaultXStep = 2;
+        /// <summary>
+        /// The number of decimal points for <see cref="XStep"/>
+        /// </summary>
+        public const int XStepDecimals = 2;
+
+        /// <summary>
         /// The minimum value for <see cref="ZoomX"/>
         /// </summary>
-        public const int MinZoomX = 1;
+        public const float MinZoomX = 0.10f;
         /// <summary>
         /// The maximum value for <see cref="ZoomX"/>
         /// </summary>
-        public const int MaxZoomX = 16;
+        public const float MaxZoomX = 10;
         /// <summary>
         /// The default value for <see cref="ZoomX"/>
         /// </summary>
-        public const int DefaultZoomX = 4;
+        public const float DefaultZoomX = 1;
+        /// <summary>
+        /// Number of decimal points for <see cref="ZoomX"/> and <see cref="ZoomY"/>
+        /// </summary>
+        public const int ZoomDecimals = 2;
+
+        /// <summary>
+        /// The minimum value for <see cref="ZoomY"/>
+        /// </summary>
+        public const float MinZoomY = 1;
+        /// <summary>
+        /// The maximum value for <see cref="ZoomY"/>
+        /// </summary>
+        public const float MaxZoomY = 2;
+        /// <summary>
+        /// The default value for <see cref="ZoomY"/>
+        /// </summary>
+        public const float DefaultZoomY = 1;
 
         /// <summary>
         /// The minimum value for <see cref="VolumeBoost"/>
@@ -97,15 +134,15 @@ namespace Restless.WaveForm.Settings
         /// <summary>
         /// The minimum value for <see cref="LineThickness"/>
         /// </summary>
-        public const int MinLineThickness = 1;
+        public const float MinLineThickness = 1;
         /// <summary>
         /// The maximum value for <see cref="LineThickness"/>
         /// </summary>
-        public const int MaxLineThickness = 8;
+        public const float MaxLineThickness = 8;
         /// <summary>
         /// The default value for <see cref="LineThickness"/>
         /// </summary>
-        public const int DefaultLineThickness = 1;
+        public const float DefaultLineThickness = 1;
 
         /// <summary>
         /// The minimum value for <see cref="CenterLineThickness"/>
@@ -161,11 +198,7 @@ namespace Restless.WaveForm.Settings
         public int Height
         {
             get => height;
-            set
-            {
-                height = value.ClampEven(MinHeight, MaxHeight);
-                OnHeightSet();
-            }
+            set => height = value.Clamp(MinHeight, MaxHeight);
         }
 
         /// <summary>
@@ -187,38 +220,59 @@ namespace Restless.WaveForm.Settings
         }
 
         /// <summary>
-        /// Gets or sets the zoom X factor.
-        /// This value is clamped between <see cref="MinZoomX"/> and <see cref="MaxZoomX"/>.
+        /// Gets or sets the desired X-axis step value.
+        /// This value is clamped between <see cref="MinXStep"/> and <see cref="MaxXStep"/>.
         /// </summary>
-        public int ZoomX
+        public float XStep
         {
-            get => zoomX;
-            set => zoomX = value.Clamp(MinZoomX, MaxZoomX);
+            get => xStepX;
+            set => xStepX = value.Clamp(MinXStep, MaxXStep).Round(XStepDecimals);
         }
 
         /// <summary>
-        /// Gets the actual zoom X factor
+        /// Gets the actual X-axis step value
         /// </summary>
-        public int ActualZoomX
+        public float ActualXStep
         {
-            get;
-            private set;
+            get => actualXStep;
+            private set => actualXStep = value.Clamp(MinXStep, MaxXStep).Round(XStepDecimals);
         }
 
         /// <summary>
-        /// Gets or sets a value that determines if <see cref="ActualZoomX"/>
+        /// Gets or sets a value that determines if <see cref="ActualXStep"/>
         /// is adjusted when creating / scaling the image used for audio render.
         /// The default value is true.
         /// </summary>
         /// <remarks>
-        /// If this property is false, <see cref="ActualZoomX"/> will not be affected
+        /// If this property is false, <see cref="ActualXStep"/> will not be affected
         /// during the image preparation operation. Only <see cref="ActualSampleResolution"/>
-        /// will be changed if needed.
+        /// will be changed if needed. This property is ignored if <see cref="ZoomX"/>
+        /// is not equal to its default value <see cref="DefaultZoomX"/>, which is 1.0.
         /// </remarks>
-        public bool ScaleZoomX
+        public bool ScaleXStep
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets or sets the value for x-axis zoom.
+        /// This value is clamped between <see cref="MinZoomX"/> and <see cref="MaxZoomX"/>.
+        /// </summary>
+        public float ZoomX
+        {
+            get => zoomX;
+            set => zoomX = value.Clamp(MinZoomX, MaxZoomX).Round(ZoomDecimals);
+        }
+
+        /// <summary>
+        /// Gets or sets the value for y-axis zoom.
+        /// This value is clamped between <see cref="MinZoomY"/> and <see cref="MaxZoomY"/>.
+        /// </summary>
+        public float ZoomY
+        {
+            get => zoomY;
+            set => zoomY = value.Clamp(MinZoomY, MaxZoomY).Round(ZoomDecimals);
         }
 
         /// <summary>
@@ -234,7 +288,7 @@ namespace Restless.WaveForm.Settings
         /// Gets or sets the line thickness.
         /// This value is clamped between <see cref="MinLineThickness"/> and <see cref="MaxLineThickness"/>.
         /// </summary>
-        public int LineThickness
+        public float LineThickness
         {
             get => lineThickness;
             set => lineThickness = value.Clamp(MinLineThickness, MaxLineThickness);
@@ -243,7 +297,7 @@ namespace Restless.WaveForm.Settings
         /// <summary>
         /// Gets the actual line thickness.
         /// </summary>
-        public int ActualLineThickness
+        public float ActualLineThickness
         {
             get => actualLineThickness;
             private set => actualLineThickness = value.Clamp(MinLineThickness, MaxLineThickness);
@@ -345,8 +399,10 @@ namespace Restless.WaveForm.Settings
             AutoWidth = DefaultAutoWidth;
 
             SampleResolution = ActualSampleResolution = DefaultSampleResolution;
-            ZoomX = ActualZoomX = DefaultZoomX;
-            ScaleZoomX = true;
+            XStep = ActualXStep = DefaultXStep;
+            ScaleXStep = true;
+            ZoomX = DefaultZoomX;
+            ZoomY = DefaultZoomY;
 
             VolumeBoost = DefaultVolumeBoost;
             LineThickness = ActualLineThickness = DefaultLineThickness;
@@ -373,12 +429,12 @@ namespace Restless.WaveForm.Settings
             // max int:              2,147,483,647
             // max long: 9,223,372,036,854,775,807
             ActualSampleResolution = SampleResolution;
-            ActualZoomX = ZoomX;
+            ActualXStep = XStep;
             ActualLineThickness = LineThickness;
             PrepareForImageWidth(sampleCount, channels);
             long autoWidth = GetClampedAutoImageWidth(sampleCount, channels);
-
-            Bitmap bitmap = new((int)autoWidth, (Height * 2) + CenterLineThickness);
+            float height = (Height * ZoomY * 2) + CenterLineThickness;
+            Bitmap bitmap = new((int)autoWidth, (int)height);
             if (BackgroundColor == Color.Transparent)
             {
                 bitmap.MakeTransparent();
@@ -416,17 +472,6 @@ namespace Restless.WaveForm.Settings
 
         #region Protected methods
         /// <summary>
-        /// Called when <see cref="Height"/> is set.
-        /// </summary>
-        /// <remarks>
-        /// Override if you need to take action on height changes.
-        /// The base implementation does nothing.
-        /// </remarks>
-        protected virtual void OnHeightSet()
-        {
-        }
-
-        /// <summary>
         /// Gets a value for <see cref="ActualLineThickness"/>
         /// </summary>
         /// <param name="actualZoomX">The actual zoom x value</param>
@@ -437,7 +482,7 @@ namespace Restless.WaveForm.Settings
         /// to adjust the actual line thickness in response to a smaller x zoom value.
         /// The base method returns the same line thickness as passed.
         /// </remarks>
-        protected virtual int GetActualLineThickness(int actualZoomX, int actualLineThickness)
+        protected virtual float GetActualLineThickness(float actualZoomX, float actualLineThickness)
         {
             return actualLineThickness;
         }
@@ -450,12 +495,12 @@ namespace Restless.WaveForm.Settings
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
             long width = GetUnClampedAutoImageWidth(sampleCount, channels);
-            if (ScaleZoomX)
+            if (ScaleXStep && ZoomX == DefaultZoomX)
             {
-                while (width > maxWidth && ActualZoomX > MinZoomX)
+                while (width > maxWidth && ActualXStep > MinXStep)
                 {
-                    ActualZoomX--;
-                    ActualLineThickness = GetActualLineThickness(ActualZoomX, ActualLineThickness);
+                    ActualXStep = (ActualXStep - 0.01f).Round(XStepDecimals);
+                    ActualLineThickness = GetActualLineThickness(ActualXStep, ActualLineThickness);
                     width = GetUnClampedAutoImageWidth(sampleCount, channels);
                 }
             }
@@ -469,13 +514,15 @@ namespace Restless.WaveForm.Settings
 
         private long GetUnClampedAutoImageWidth(long sampleCount, int channels)
         {
-            return Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX;
+            float rawValue = Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualXStep * ZoomX;
+            return (long)rawValue;
         }
 
         private long GetClampedAutoImageWidth(long sampleCount, int channels)
         {
             int maxWidth = AutoWidth ? MaxWidth : Width;
-            return Math.Min(Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualZoomX, maxWidth);
+            float rawValue = Utility.GetEven(Math.Min(sampleCount, int.MaxValue) / channels) / ActualSampleResolution * ActualXStep * ZoomX;
+            return Math.Min((long)rawValue, maxWidth);
         }
         #endregion
     }

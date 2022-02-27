@@ -35,11 +35,12 @@
             <Setter Property="Margin" Value="0,4,0,8"/>
         </Style>
 
-        <Style TargetType="Slider">
+        <Style x:Key="DefaultSliderStyle" TargetType="Slider">
             <Setter Property="Margin" Value="4,2"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Width" Value="180"/>
         </Style>
+        <Style TargetType="Slider" BasedOn="{StaticResource DefaultSliderStyle}"/>
 
         <Style TargetType="CheckBox">
             <Setter Property="Margin" Value="8,0"/>

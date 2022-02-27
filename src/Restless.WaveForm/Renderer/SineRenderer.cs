@@ -26,8 +26,12 @@ namespace Restless.WaveForm.Renderer
         /// <param name="graphics">The graphics object used to draw the rendering</param>
         protected override void Render(Graphics graphics)
         {
-            int x = 0;
+            float x = 0;
+            float y1;
+            float y2 = 0;
+
             Pen pen = Settings.GetPen(RenderPenType.PrimaryLine);
+            int count = 0;
 
             int sampleCount = ReadSamples();
 
@@ -35,12 +39,11 @@ namespace Restless.WaveForm.Renderer
             {
                 for (int idx = 0; idx < sampleCount - Settings.ActualSampleResolution; idx += Settings.ActualSampleResolution)
                 {
-                    float y1 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx));
-                    float y2 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx + Settings.ActualSampleResolution));
-
-                    graphics.DrawLine(pen, x, y1, x + Settings.ActualZoomX, y2);
-
-                    x += Settings.ActualZoomX;
+                    y1 = count == 0 ? CenterY - GetAppliedScaledValue(GetCalculatorValue(idx)) : y2;
+                    y2 = CenterY - GetAppliedScaledValue(GetCalculatorValue(idx + Settings.ActualSampleResolution));
+                    graphics.DrawLine(pen, x, y1, x + Settings.ActualXStep, y2);
+                    count++;
+                    x += Settings.ActualXStep;
                 }
                 sampleCount = ReadSamples();
             }

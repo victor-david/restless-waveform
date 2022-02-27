@@ -8,7 +8,7 @@ using System.Drawing.Drawing2D;
 namespace Restless.WaveForm.Renderer
 {
     /// <summary>
-    /// Base class for renderers
+    /// Base class for renderers. This class must be inherited.
     /// </summary>
     public abstract class Renderer : IRenderer
     {
@@ -142,7 +142,6 @@ namespace Restless.WaveForm.Renderer
             }
 
             graphics.SmoothingMode = SmoothingMode.HighQuality;
-
             graphics.FillRectangle(Settings.GetBackgroundBrush(), 0, 0, Image.Width, Image.Height);
 
             if (Stream.WaveFormat.Channels == 2)
@@ -150,10 +149,10 @@ namespace Restless.WaveForm.Renderer
                 switch (channel)
                 {
                     case Channel.Left:
-                        sampleProvider = sampleProvider.ToMono(0.5f, 0);
+                        sampleProvider = sampleProvider.ToMono(1, 0);
                         break;
                     case Channel.Right:
-                        sampleProvider = sampleProvider.ToMono(0, 1.5f);
+                        sampleProvider = sampleProvider.ToMono(0, 1);
                         break;
                     default:
                         break;
@@ -161,8 +160,12 @@ namespace Restless.WaveForm.Renderer
             }
 
             Stream.Position = 0;
-            
+
+            graphics.ScaleTransform(Settings.ZoomX, Settings.ZoomY);
             Render(graphics);
+
+            graphics.ResetTransform();
+            graphics.ScaleTransform(1, Settings.ZoomY);
             DrawCenterLine(graphics);
         }
         #endregion
@@ -226,7 +229,6 @@ namespace Restless.WaveForm.Renderer
                 float centerY = CenterY + Settings.CenterLineThickness;
                 Pen pen = Settings.GetPen(RenderPenType.CenterLine);
                 graphics.DrawLine(pen, 0, centerY, Image.Width, centerY);
-
             }
         }
         #endregion

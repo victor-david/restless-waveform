@@ -17,7 +17,7 @@ namespace Restless.WaveForm.Renderer
         }
 
         /// <summary>
-        /// Gets the image for the right channel
+        /// Gets the image for the right channel.
         /// </summary>
         public Image ImageRight
         {
@@ -44,6 +44,13 @@ namespace Restless.WaveForm.Renderer
             get;
         }
 
+        /// <summary>
+        /// From this assembly, initializes a new instance of the <see cref="RenderResult"/> class.
+        /// </summary>
+        /// <param name="imageLeft">The image for the left channel</param>
+        /// <param name="imageRight">The image for the right channel</param>
+        /// <param name="samples">The total sample count</param>
+        /// <param name="channels">The number of channels</param>
         internal RenderResult(Image imageLeft, Image imageRight, long samples, int channels)
         {
             ImageLeft = imageLeft ?? throw new ArgumentNullException(nameof(imageLeft));
