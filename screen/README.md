@@ -9,5 +9,5 @@
 ### Mono (fat bar renderer)
 ![Restless Waveform Screenshot #3](/screen/restless.waveform.3.jpg)
 
-### Mono(bar renderer with sine style)
+### Mono (bar renderer with sine style)
 ![Restless Waveform Screenshot #4](/screen/restless.waveform.4.jpg)
